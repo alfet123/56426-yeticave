@@ -9,16 +9,15 @@ $bets = [
 ];
 
 // функция выводит время в относительном формате
-function timeInRelativeFormat($ts) {
+function timeInRelativeFormat($ts)
+{
     $minutes = (time() - $ts) / 60;
     $hours = $minutes / 60;
     if ($hours > 24) {
         $result = gmdate("d.m.y в H:i", $ts);
-    }
-    else if ($minutes > 60) {
+    } else if ($minutes > 60) {
         $result = "".$hours." часов назад";
-    }
-    else {
+    } else {
         $result = "".$minutes." минут назад";
     }
     return $result;
