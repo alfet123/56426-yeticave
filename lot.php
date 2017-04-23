@@ -16,9 +16,9 @@ function timeInRelativeFormat($ts)
     if ($hours > 24) {
         $result = gmdate("d.m.y в H:i", $ts);
     } else if ($minutes > 60) {
-        $result = "".$hours." часов назад";
+        $result = (int) $hours." часов назад";
     } else {
-        $result = "".$minutes." минут назад";
+        $result = (int) $minutes." минут назад";
     }
     return $result;
 }
