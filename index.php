@@ -15,7 +15,7 @@ $now = time();
 $lot_time_remaining = gmdate("H:i", $tomorrow - $now);
 
 // массив категорий
-$category = ["Доски и лыжи", "Крепления", "Ботинки", "Одежда", "Инструменты", "Разное"];
+$categories = ["Доски и лыжи", "Крепления", "Ботинки", "Одежда", "Инструменты", "Разное"];
 
 // массив объявлений
 $lots = [
@@ -92,7 +92,7 @@ $lots = [
             <h2>Открытые лоты</h2>
             <select class="lots__select">
                 <option>Все категории</option>
-                <?php foreach ($category as $key => $value): ?>
+                <?php foreach ($categories as $key => $value): ?>
                     <option><?=$value;?></option>
                 <?php endforeach; ?>
             </select>

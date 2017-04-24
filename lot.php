@@ -7,6 +7,22 @@ $bets = [
     ['name' => 'Евгений', 'price' => 10500, 'ts' => strtotime('-' . rand(25, 50) .' hour')],
     ['name' => 'Семён', 'price' => 10000, 'ts' => strtotime('last week')]
 ];
+
+// функция выводит время в относительном формате
+function timeInRelativeFormat($ts)
+{
+    $minutes = (time() - $ts) / 60;
+    $hours = $minutes / 60;
+    if ($hours > 24) {
+        $result = gmdate("d.m.y в H:i", $ts);
+    } else if ($minutes > 60) {
+        $result = (int) $hours." часов назад";
+    } else {
+        $result = (int) $minutes." минут назад";
+    }
+    return $result;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -109,13 +125,14 @@ $bets = [
                 </div>
                 <div class="history">
                     <h3>История ставок (<span>4</span>)</h3>
-                    <!-- заполните эту таблицу данными из массива $bets-->
                     <table class="history__list">
+                        <?php foreach ($bets as $key => $value): ?>
                         <tr class="history__item">
-                            <td class="history__name"><!-- имя автора--></td>
-                            <td class="history__price"><!-- цена--> р</td>
-                            <td class="history__time"><!-- дата в человеческом формате--></td>
+                            <td class="history__name"><?=$value['name'];?></td>
+                            <td class="history__price"><?=$value['price'];?> р</td>
+                            <td class="history__time"><?=timeInRelativeFormat($value['ts']);?></td>
                         </tr>
+                        <?php endforeach; ?>
                     </table>
                 </div>
             </div>
