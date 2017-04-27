@@ -41,11 +41,11 @@ $lots = [
 </head>
 <body>
 
-<?=includeTemplate('header.php', []); ?>
+<?=includeTemplate('templates/header.php', []); ?>
 
-<?=includeTemplate('main.php', ['categories' => $categories, 'lots' => $lots, 'lot_time_remaining' => $lot_time_remaining]); ?>
+<?=includeTemplate('templates/main.php', ['categories' => $categories, 'lots' => $lots, 'lot_time_remaining' => $lot_time_remaining]); ?>
 
-<?=includeTemplate('footer.php', []); ?>
+<?=includeTemplate('templates/footer.php', []); ?>
 
 </body>
 </html>

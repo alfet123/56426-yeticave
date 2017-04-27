@@ -1,5 +1,3 @@
-<?php
-
 <footer class="main-footer">
     <nav class="nav">
         <ul class="nav__list container">
@@ -59,5 +57,3 @@
         </div>
     </div>
 </footer>
-
-?>
