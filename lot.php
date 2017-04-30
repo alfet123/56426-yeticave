@@ -26,7 +26,7 @@ $bets = [
 
 <?=includeTemplate('templates/lot_main.php', ['bets' => $bets]); ?>
 
-<?=includeTemplate('templates/lot_footer.php', []); ?>
+<?=includeTemplate('templates/footer.php', []); ?>
 
 </body>
 </html>
