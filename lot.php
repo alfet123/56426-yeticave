@@ -2,6 +2,9 @@
 // подключение файла с функциями
 require_once 'functions.php';
 
+// подключение файла с данными лотов
+require_once 'lots_data.php';
+
 // ставки пользователей, которыми надо заполнить таблицу
 $bets = [
     ['name' => 'Иван', 'price' => 11500, 'ts' => strtotime('-' . rand(1, 50) .' minute')],
