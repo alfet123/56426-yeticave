@@ -5,16 +5,22 @@ require_once 'functions.php';
 // подключение файла с данными лотов
 require_once 'lots_data.php';
 
-$current_lot = null;
-if (isset($_GET[id])) {
-    if (isset($lots[$_GET[id]])) {
-        $current_lot = $lots[$_GET[id]];
-    } else {
-        print("Недопустимое значение параметра ID");
-    }
-} else {
-    print("Нет параметра ID");
+// проверка, что есть get-параметр id, если нет то 404
+if (!isset($_GET['id'])) {
+    header("HTTP/1.0 404 Not Found");
+    echo "id is required";
+    exit;
 }
+
+// если передали несуществующий id, то тоже 404
+$lotId = $_GET['id'];
+if (!isset($lots[$lotId])) {
+    header("HTTP/1.0 404 Not Found");
+    echo "Bad id";
+    exit;
+}
+
+$current_lot = $lots[$lotId];
 
 // ставки пользователей, которыми надо заполнить таблицу
 $bets = [
