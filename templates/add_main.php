@@ -1,24 +1,11 @@
 <main>
     <nav class="nav">
         <ul class="nav__list container">
+            <?php foreach ($categories as $key => $value): ?>
             <li class="nav__item">
-                <a href="all-lots.html">Доски и лыжи</a>
+                <a href="all-lots.html"><?=$value;?></a>
             </li>
-            <li class="nav__item">
-                <a href="all-lots.html">Крепления</a>
-            </li>
-            <li class="nav__item">
-                <a href="all-lots.html">Ботинки</a>
-            </li>
-            <li class="nav__item">
-                <a href="all-lots.html">Одежда</a>
-            </li>
-            <li class="nav__item">
-                <a href="all-lots.html">Инструменты</a>
-            </li>
-            <li class="nav__item">
-                <a href="all-lots.html">Разное</a>
-            </li>
+            <?php endforeach; ?>
         </ul>
     </nav>
     <form class="form form--add-lot container <?=$class['form'];?>" action="add.php" method="post" enctype="multipart/form-data"> <!-- form--invalid -->
@@ -33,12 +20,9 @@
                 <label for="category">Категория</label>
                 <select id="category" name="category"> <!-- required -->
                     <option>Выберите категорию</option>
-                    <option>Доски и лыжи</option>
-                    <option>Крепления</option>
-                    <option>Ботинки</option>
-                    <option>Одежда</option>
-                    <option>Инструменты</option>
-                    <option>Разное</option>
+                    <?php foreach ($categories as $key => $value): ?>
+                        <option><?=$value;?></option>
+                    <?php endforeach; ?>
                 </select>
                 <span class="form__error"><?=$message['category'];?></span>
             </div>
@@ -81,6 +65,6 @@
             </div>
         </div>
         <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
-        <button type="submit" class="button">Добавить лот</button>
+        <button type="submit" class="button" name="send">Добавить лот</button>
     </form>
 </main>

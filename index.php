@@ -2,8 +2,8 @@
 // подключение файла с функциями
 require_once 'functions.php';
 
-// подключение файла с данными лотов
-require_once 'lots_data.php';
+// подключение файла с данными
+require_once 'data.php';
 
 // устанавливаем часовой пояс в Московское время
 date_default_timezone_set('Europe/Moscow');
@@ -20,9 +20,6 @@ $now = time();
 // далее нужно вычислить оставшееся время до начала следующих суток и записать его в переменную $lot_time_remaining
 $lot_time_remaining = gmdate("H:i", $tomorrow - $now);
 
-// массив категорий
-$categories = ["Доски и лыжи", "Крепления", "Ботинки", "Одежда", "Инструменты", "Разное"];
-
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -38,7 +35,7 @@ $categories = ["Доски и лыжи", "Крепления", "Ботинки",
 
 <?=includeTemplate('templates/main.php', ['categories' => $categories, 'lots' => $lots, 'lot_time_remaining' => $lot_time_remaining]); ?>
 
-<?=includeTemplate('templates/footer.php', []); ?>
+<?=includeTemplate('templates/footer.php', ['categories' => $categories]); ?>
 
 </body>
 </html>
