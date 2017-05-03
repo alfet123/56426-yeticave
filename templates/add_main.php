@@ -19,9 +19,9 @@
             <div class="form__item <?=$class['category'];?>">
                 <label for="category">Категория</label>
                 <select id="category" name="category"> <!-- required -->
-                    <option>Выберите категорию</option>
+                    <option value="0">Выберите категорию</option>
                     <?php foreach ($categories as $key => $value): ?>
-                        <option><?=$value;?></option>
+                        <option value="<?=$key+1;?>"<?=($data['category']==$key+1)?' selected':'';?>><?=$value;?></option>
                     <?php endforeach; ?>
                 </select>
                 <span class="form__error"><?=$message['category'];?></span>
@@ -46,6 +46,7 @@
                     <span>+ Добавить</span>
                 </label>
             </div>
+            <span class="form__error"><?=$message['lot-image'];?></span>
         </div>
         <div class="form__container-three">
             <div class="form__item form__item--small <?=$class['lot-rate'];?>">

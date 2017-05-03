@@ -15,11 +15,11 @@ $formData = [
     'lot-date' => ''
 ];
 
-foreach ($formData as $key) {
+foreach ($formData as $key => $value) {
     // массив для дополнительных классов
-    $formClasses[$key] = '';
+    $formClasses[$key] = $value;
     // массив для сообщений
-    $formMessages[$key] = '';
+    $formMessages[$key] = $value;
 }
 $formClasses['form'] = '';
 
@@ -58,9 +58,22 @@ if (isset($_POST['send'])) {
         if (move_uploaded_file($source, $target)) {
             $formData['lot-image'] = $target;
             $formClasses['lot-image'] = 'form__item--uploaded';
+        } else {
+            $formClasses['form'] = 'form--invalid';
+            $formClasses['lot-image'] = 'form__item--invalid';
+            $formMessages['lot-image'] = 'Выберите файл для загрузки';
         }
     }
 
+}
+
+if (isset($_POST['send']) && empty($formClasses['form'])) {
+    $template = 'templates/main.php';
+    array_unshift($lots, ['name' => $formData['lot-name'], 'category' => $categories[$formData['category']-1], 'price' => $formData['lot-rate'], 'image' => $formData['lot-image']]);
+    $data = ['categories' => $categories, 'lots' => $lots];
+} else {
+    $template = 'templates/add_main.php';
+    $data = ['categories' => $categories, 'data' => $formData, 'class' => $formClasses, 'message' => $formMessages];
 }
 
 ?>
@@ -77,7 +90,7 @@ if (isset($_POST['send'])) {
 
 <?=includeTemplate('templates/lot_header.php', []); ?>
 
-<?=includeTemplate('templates/add_main.php', ['categories' => $categories, 'data' => $formData, 'class' => $formClasses, 'message' => $formMessages]); ?>
+<?=includeTemplate($template, $data); ?>
 
 <?=includeTemplate('templates/footer.php', ['categories' => $categories]); ?>
 
