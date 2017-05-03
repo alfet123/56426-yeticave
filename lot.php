@@ -2,8 +2,8 @@
 // подключение файла с функциями
 require_once 'functions.php';
 
-// подключение файла с данными лотов
-require_once 'lots_data.php';
+// подключение файла с данными
+require_once 'data.php';
 
 // проверка, что есть get-параметр id, если нет то 404
 if (!isset($_GET['id'])) {
@@ -44,9 +44,9 @@ $bets = [
 
 <?=includeTemplate('templates/lot_header.php', []); ?>
 
-<?=includeTemplate('templates/lot_main.php', ['lot' => $current_lot, 'bets' => $bets]); ?>
+<?=includeTemplate('templates/lot_main.php', ['categories' => $categories, 'lot' => $current_lot, 'bets' => $bets]); ?>
 
-<?=includeTemplate('templates/footer.php', []); ?>
+<?=includeTemplate('templates/footer.php', ['categories' => $categories]); ?>
 
 </body>
 </html>

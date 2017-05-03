@@ -1,24 +1,11 @@
 <main>
     <nav class="nav">
         <ul class="nav__list container">
+            <?php foreach ($categories as $key => $value): ?>
             <li class="nav__item">
-                <a href="">Доски и лыжи</a>
+                <a href="all-lots.html"><?=$value;?></a>
             </li>
-            <li class="nav__item">
-                <a href="">Крепления</a>
-            </li>
-            <li class="nav__item">
-                <a href="">Ботинки</a>
-            </li>
-            <li class="nav__item">
-                <a href="">Одежда</a>
-            </li>
-            <li class="nav__item">
-                <a href="">Инструменты</a>
-            </li>
-            <li class="nav__item">
-                <a href="">Разное</a>
-            </li>
+            <?php endforeach; ?>
         </ul>
     </nav>
     <section class="lot-item container">
