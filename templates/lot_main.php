@@ -31,7 +31,7 @@
             <?php if (isset($_SESSION['user'])): ?>
                 <div class="lot-item__state">
                     <div class="lot-item__timer timer">
-                        10:54:12
+                        <?=$lot_time_remaining;?>
                     </div>
                     <div class="lot-item__cost-state">
                         <div class="lot-item__rate">

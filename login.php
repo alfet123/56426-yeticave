@@ -16,38 +16,30 @@ $formData = [
     'password' => ''
 ];
 
-foreach ($formData as $key => $value) {
-    // массив для дополнительных классов
-    $formClasses[$key] = $value;
-    // массив для сообщений
-    $formMessages[$key] = $value;
-}
-$formClasses['form'] = '';
+// массив для дополнительных классов
+$formClasses = ['form' => ''];
+// массив для сообщений
+$formMessages = [];
 
-// функция установки класса и сообщения при ошибке на форме
-function setFormError($field, $message)
-{
-    global $formClasses, $formMessages;
-    $formClasses['form'] = 'form--invalid';
-    $formClasses[$field] = 'form__item--invalid';
-    $formMessages[$field] = $message;
+foreach ($formData as $key => $value) {
+    $formClasses[$key] = $value;
+    $formMessages[$key] = $value;
 }
 
 // проверка, что была отправка формы
 if (isset($_POST['send'])) {
 
-    //проверка поля email
-    if (empty($_POST['email'])) {
-        setFormError('email', 'Введите e-mail');
-    } else {
-        $formData['email'] = $_POST['email'];
-    }
+    $errorMessages = [
+        'email' => 'Введите e-mail',
+        'password' => 'Введите пароль'
+    ];
 
-    //проверка поля password
-    if (empty($_POST['password'])) {
-        setFormError('password', 'Введите пароль');
-    } else {
-        $formData['password'] = $_POST['password'];
+    foreach ($errorMessages as $key => $value) {
+        if (empty($_POST[$key])) {
+            setFormError($formClasses, $formMessages, $key, $value);
+        } else {
+            $formData[$key] = $_POST[$key];
+        }
     }
 
 }
@@ -63,13 +55,14 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
         if (password_verify($password, $user['password'])) {
             $_SESSION['user'] = $user;
             header("Location: /");
+            exit;
         } else {
             $formData['password'] = '';
-            setFormError('password', 'Вы ввели неверный пароль');
+            setFormError($formClasses, $formMessages, 'password', 'Вы ввели неверный пароль');
         }
     } else {
         $formData['email'] = '';
-        setFormError('email', 'Вы ввели неверный e-mail');
+        setFormError($formClasses, $formMessages, 'email', 'Вы ввели неверный e-mail');
     }
 
 }
