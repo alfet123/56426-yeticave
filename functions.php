@@ -45,4 +45,17 @@ function timeInRelativeFormat($ts)
     return $result;
 }
 
+// функция поиска пользователя по e-mail
+function searchUserByEmail($email, $users)
+{
+    $result = null;
+    foreach ($users as $user) {
+        if ($user['email'] == $email) {
+            $result = $user;
+            break;
+        }
+    }
+    return $result;
+}
+
 ?>

@@ -13,12 +13,12 @@
         <div class="form__item <?=$class['email'];?>"> <!-- form__item--invalid -->
             <label for="email">E-mail*</label>
             <input id="email" type="text" name="email" value="<?=$data['email'];?>" placeholder="Введите e-mail"> <!-- required -->
-            <span class="form__error">Введите e-mail</span>
+            <span class="form__error"><?=$message['email'];?></span>
         </div>
         <div class="form__item form__item--last <?=$class['password'];?>">
             <label for="password">Пароль*</label>
             <input id="password" type="text" name="password" value="<?=$data['password'];?>" placeholder="Введите пароль"> <!-- required -->
-            <span class="form__error">Введите пароль</span>
+            <span class="form__error"><?=$message['password'];?></span>
         </div>
         <button type="submit" class="button" name="send">Войти</button>
     </form>
