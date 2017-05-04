@@ -45,4 +45,25 @@ function timeInRelativeFormat($ts)
     return $result;
 }
 
+// функция установки класса и сообщения при ошибке на форме
+function setFormError(&$formClasses, &$formMessages, $field, $message)
+{
+    $formClasses['form'] = 'form--invalid';
+    $formClasses[$field] = 'form__item--invalid';
+    $formMessages[$field] = $message;
+}
+
+// функция поиска пользователя по e-mail
+function searchUserByEmail($email, $users)
+{
+    $result = null;
+    foreach ($users as $user) {
+        if ($user['email'] == $email) {
+            $result = $user;
+            break;
+        }
+    }
+    return $result;
+}
+
 ?>

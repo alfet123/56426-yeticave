@@ -1,4 +1,12 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['user'])) {
+    header("HTTP/1.0 403 Forbidden");
+    echo "Доступ запрещен";
+    exit;
+}
+
 // подключение файла с функциями
 require_once 'functions.php';
 
@@ -15,21 +23,14 @@ $formData = [
     'lot-date' => ''
 ];
 
-foreach ($formData as $key => $value) {
-    // массив для дополнительных классов
-    $formClasses[$key] = $value;
-    // массив для сообщений
-    $formMessages[$key] = $value;
-}
-$formClasses['form'] = '';
+// массив для дополнительных классов
+$formClasses = ['form' => ''];
+// массив для сообщений
+$formMessages = [];
 
-// функция установки класса и сообщения при ошибке на форме
-function setFormError($field, $message)
-{
-    global $formClasses, $formMessages;
-    $formClasses['form'] = 'form--invalid';
-    $formClasses[$field] = 'form__item--invalid';
-    $formMessages[$field] = $message;
+foreach ($formData as $key => $value) {
+    $formClasses[$key] = $value;
+    $formMessages[$key] = $value;
 }
 
 // проверка, что была отправка формы
@@ -38,7 +39,7 @@ if (isset($_POST['send'])) {
     //проверка пустых значений
     foreach ($formData as $key => $value) {
         if (empty($_POST[$key])) {
-            setFormError($key, 'Заполните это поле');
+            setFormError($formClasses, $formMessages, $key, 'Заполните это поле');
         } else {
             $formData[$key] = $_POST[$key];
         }
@@ -46,10 +47,10 @@ if (isset($_POST['send'])) {
 
     //проверка числовых значений
     if (!empty($formData['lot-rate']) && !is_numeric($formData['lot-rate'])) {
-        setFormError('lot-rate', 'Введите числовое значение');
+        setFormError($formClasses, $formMessages, 'lot-rate', 'Введите числовое значение');
     }
     if (!empty($formData['lot-step']) && !is_numeric($formData['lot-step'])) {
-        setFormError('lot-step', 'Введите числовое значение');
+        setFormError($formClasses, $formMessages, 'lot-step', 'Введите числовое значение');
     }
 
     // cохранение загруженного файла
@@ -62,7 +63,7 @@ if (isset($_POST['send'])) {
             $formData['lot-image'] = $target;
             $formClasses['lot-image'] = 'form__item--uploaded';
         } else {
-            setFormError('lot-image', 'Выберите файл для загрузки');
+            setFormError($formClasses, $formMessages, 'lot-image', 'Выберите файл для загрузки');
         }
     }
 
@@ -90,7 +91,7 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
 </head>
 <body>
 
-<?=includeTemplate('templates/lot_header.php', []); ?>
+<?=includeTemplate('templates/header.php', []); ?>
 
 <?=includeTemplate($template, $data); ?>
 

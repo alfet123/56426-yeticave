@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 // подключение файла с функциями
 require_once 'functions.php';
 
