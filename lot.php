@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 // подключение файла с функциями
 require_once 'functions.php';
 
@@ -42,7 +44,7 @@ $bets = [
 </head>
 <body>
 
-<?=includeTemplate('templates/lot_header.php', []); ?>
+<?=includeTemplate('templates/header.php', []); ?>
 
 <?=includeTemplate('templates/lot_main.php', ['categories' => $categories, 'lot' => $current_lot, 'bets' => $bets]); ?>
 

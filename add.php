@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 // подключение файла с функциями
 require_once 'functions.php';
 
@@ -90,7 +92,7 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
 </head>
 <body>
 
-<?=includeTemplate('templates/lot_header.php', []); ?>
+<?=includeTemplate('templates/header.php', []); ?>
 
 <?=includeTemplate($template, $data); ?>
 
