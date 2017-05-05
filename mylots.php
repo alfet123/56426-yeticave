@@ -7,6 +7,14 @@ require_once 'functions.php';
 // подключение файла с данными
 require_once 'data.php';
 
+if (isset($_COOKIE['mybets'])) {
+    $mybets = json_decode($_COOKIE['mybets']);
+    $bets = [];
+    foreach ($mybets as $key => $value) {
+        $bets[] = json_decode($value, true);
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -20,7 +28,7 @@ require_once 'data.php';
 
 <?=includeTemplate('templates/header.php', []); ?>
 
-<?=includeTemplate('templates/mylots_main.php', ['categories' => $categories]); ?>
+<?=includeTemplate('templates/mylots_main.php', ['categories' => $categories, 'lots' => $lots, 'bets' => $bets, 'lot_time_remaining' => $lot_time_remaining]); ?>
 
 <?=includeTemplate('templates/footer.php', ['categories' => $categories]); ?>
 

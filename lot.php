@@ -46,6 +46,8 @@ if (isset($_POST['cost'])) {
 
     setcookie($name, $value, $expire, $path);
 
+    header("Location: mylots.php");
+    exit;
 }
 
 ?>
