@@ -23,14 +23,30 @@ if (!isset($lots[$lotId])) {
 }
 
 $current_lot = $lots[$lotId];
+$current_lot['id'] = $lotId;
 
-// ставки пользователей, которыми надо заполнить таблицу
-$bets = [
-    ['name' => 'Иван', 'price' => 11500, 'ts' => strtotime('-' . rand(1, 50) .' minute')],
-    ['name' => 'Константин', 'price' => 11000, 'ts' => strtotime('-' . rand(1, 18) .' hour')],
-    ['name' => 'Евгений', 'price' => 10500, 'ts' => strtotime('-' . rand(25, 50) .' hour')],
-    ['name' => 'Семён', 'price' => 10000, 'ts' => strtotime('last week')]
-];
+if (isset($_POST['cost'])) {
+
+    $mybets = [];
+
+    if (isset($_COOKIE['mybets'])) {
+        $mybets = json_decode($_COOKIE['mybets']);
+    }
+
+    $bet['id'] = $lotId;
+    $bet['cost'] = $_POST['cost'];
+    $bet['ts'] = time();
+
+    $mybets[] = json_encode($bet);
+
+    $name = 'mybets';
+    $value = json_encode($mybets);
+    $expire = strtotime("+30 days");
+    $path = '/';
+
+    setcookie($name, $value, $expire, $path);
+
+}
 
 ?>
 
