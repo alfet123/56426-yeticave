@@ -24,14 +24,22 @@ if (!isset($lots[$lotId])) {
 
 $current_lot = $lots[$lotId];
 $current_lot['id'] = $lotId;
+$current_lot['no-bet'] = true;
+
+$mybets = [];
+if (isset($_COOKIE['mybets'])) {
+    $mybets = json_decode($_COOKIE['mybets']);
+}
+
+foreach ($mybets as $key => $value) {
+    $bet = json_decode($value, true);
+    if ($lotId == $bet['id']) {
+        $current_lot['no-bet'] = false;
+        break;
+    }
+}
 
 if (isset($_POST['cost'])) {
-
-    $mybets = [];
-
-    if (isset($_COOKIE['mybets'])) {
-        $mybets = json_decode($_COOKIE['mybets']);
-    }
 
     $bet['id'] = $lotId;
     $bet['cost'] = $_POST['cost'];
