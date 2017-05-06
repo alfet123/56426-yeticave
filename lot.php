@@ -22,6 +22,9 @@ if (!isset($lots[$lotId])) {
     exit;
 }
 
+// получение массива ставок
+$mybets = decodeCookie('mybets');
+
 $current_lot = $lots[$lotId];
 $current_lot['id'] = $lotId;
 $current_lot['no-bet'] = true;
@@ -29,14 +32,8 @@ $current_lot['class'] = '';
 $current_lot['message'] = '';
 $current_lot['min-bet'] = getMaxBet($bets) + $current_lot['step'];
 
-$mybets = [];
-if (isset($_COOKIE['mybets'])) {
-    $mybets = json_decode($_COOKIE['mybets']);
-}
-
 foreach ($mybets as $key => $value) {
-    $bet = json_decode($value, true);
-    if ($lotId == $bet['id']) {
+    if ($lotId == $value['id']) {
         $current_lot['no-bet'] = false;
         break;
     }
@@ -54,11 +51,7 @@ if (isset($_POST['cost'])) {
         $current_lot['class'] = 'form__item--invalid';
         $current_lot['message'] = 'Минимальная ставка '.$current_lot['min-bet'];
     } else {
-        $bet['id'] = $lotId;
-        $bet['cost'] = $_POST['cost'];
-        $bet['ts'] = time();
-
-        $mybets[] = json_encode($bet);
+        $mybets[] = ['id' => $lotId, 'cost' => $_POST['cost'], 'ts' => time()];
 
         $name = 'mybets';
         $value = json_encode($mybets);

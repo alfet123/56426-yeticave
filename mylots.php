@@ -1,25 +1,17 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user'])) {
-    header("HTTP/1.0 403 Forbidden");
-    echo "Доступ запрещен";
-    exit;
-}
-
 // подключение файла с функциями
 require_once 'functions.php';
 
 // подключение файла с данными
 require_once 'data.php';
 
-if (isset($_COOKIE['mybets'])) {
-    $mybetsFromCookie = json_decode($_COOKIE['mybets']);
-    $mybets = [];
-    foreach ($mybetsFromCookie as $key => $value) {
-        $mybets[] = json_decode($value, true);
-    }
-}
+// проверка аутентификации
+requireAuthentication();
+
+// получение массива ставок
+$mybets = decodeCookie('mybets');
 
 ?>
 <!DOCTYPE html>

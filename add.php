@@ -1,17 +1,14 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user'])) {
-    header("HTTP/1.0 403 Forbidden");
-    echo "Доступ запрещен";
-    exit;
-}
-
 // подключение файла с функциями
 require_once 'functions.php';
 
 // подключение файла с данными
 require_once 'data.php';
+
+// проверка аутентификации
+requireAuthentication();
 
 // массив для данных из формы
 $formData = [
