@@ -36,8 +36,8 @@ create table `user` (
   `contacts` char(64) not null
 );
 
-create unique index `category_name` on `category`(`name`);
-create unique index `user_email` on `user`(`email`);
+create unique index `unique_category_name` on `category`(`name`);
+create unique index `unique_user_email` on `user`(`email`);
 
 create index `lot_category` on `lot`(`category`);
 create index `user_email` on `user`(`email`);
