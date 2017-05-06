@@ -25,6 +25,9 @@ if (!isset($lots[$lotId])) {
 $current_lot = $lots[$lotId];
 $current_lot['id'] = $lotId;
 $current_lot['no-bet'] = true;
+$current_lot['class'] = '';
+$current_lot['message'] = '';
+$current_lot['min-bet'] = getMaxBet($bets) + $current_lot['step'];
 
 $mybets = [];
 if (isset($_COOKIE['mybets'])) {
@@ -41,21 +44,32 @@ foreach ($mybets as $key => $value) {
 
 if (isset($_POST['cost'])) {
 
-    $bet['id'] = $lotId;
-    $bet['cost'] = $_POST['cost'];
-    $bet['ts'] = time();
+    if (empty($_POST['cost'])) {
+        $current_lot['class'] = 'form__item--invalid';
+        $current_lot['message'] = 'Заполните это поле';
+    } elseif (!is_numeric($_POST['cost'])) {
+        $current_lot['class'] = 'form__item--invalid';
+        $current_lot['message'] = 'Введите числовое значение';
+    } elseif ($_POST['cost'] < $current_lot['min-bet']) {
+        $current_lot['class'] = 'form__item--invalid';
+        $current_lot['message'] = 'Минимальная ставка '.$current_lot['min-bet'];
+    } else {
+        $bet['id'] = $lotId;
+        $bet['cost'] = $_POST['cost'];
+        $bet['ts'] = time();
 
-    $mybets[] = json_encode($bet);
+        $mybets[] = json_encode($bet);
 
-    $name = 'mybets';
-    $value = json_encode($mybets);
-    $expire = strtotime("+30 days");
-    $path = '/';
+        $name = 'mybets';
+        $value = json_encode($mybets);
+        $expire = strtotime("+30 days");
+        $path = '/';
 
-    setcookie($name, $value, $expire, $path);
+        setcookie($name, $value, $expire, $path);
 
-    header("Location: mylots.php");
-    exit;
+        header("Location: mylots.php");
+        exit;
+    }
 }
 
 ?>

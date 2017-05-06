@@ -1,6 +1,12 @@
 <?php
 session_start();
 
+if (!isset($_SESSION['user'])) {
+    header("HTTP/1.0 403 Forbidden");
+    echo "Доступ запрещен";
+    exit;
+}
+
 // подключение файла с функциями
 require_once 'functions.php';
 
@@ -8,10 +14,10 @@ require_once 'functions.php';
 require_once 'data.php';
 
 if (isset($_COOKIE['mybets'])) {
-    $mybets = json_decode($_COOKIE['mybets']);
-    $bets = [];
-    foreach ($mybets as $key => $value) {
-        $bets[] = json_decode($value, true);
+    $mybetsFromCookie = json_decode($_COOKIE['mybets']);
+    $mybets = [];
+    foreach ($mybetsFromCookie as $key => $value) {
+        $mybets[] = json_decode($value, true);
     }
 }
 
@@ -28,7 +34,7 @@ if (isset($_COOKIE['mybets'])) {
 
 <?=includeTemplate('templates/header.php', []); ?>
 
-<?=includeTemplate('templates/mylots_main.php', ['categories' => $categories, 'lots' => $lots, 'bets' => $bets, 'lot_time_remaining' => $lot_time_remaining]); ?>
+<?=includeTemplate('templates/mylots_main.php', ['categories' => $categories, 'lots' => $lots, 'mybets' => $mybets, 'lot_time_remaining' => $lot_time_remaining]); ?>
 
 <?=includeTemplate('templates/footer.php', ['categories' => $categories]); ?>
 

@@ -72,7 +72,7 @@ if (isset($_POST['send'])) {
 // проверка, что форма заполнена полностью
 if (isset($_POST['send']) && empty($formClasses['form'])) {
     $template = 'templates/main.php';
-    array_unshift($lots, ['name' => $formData['lot-name'], 'category' => $categories[$formData['category']-1], 'price' => $formData['lot-rate'], 'image' => $formData['lot-image']]);
+    array_unshift($lots, ['name' => $formData['lot-name'], 'category' => $categories[$formData['category']-1], 'price' => $formData['lot-rate'], 'image' => $formData['lot-image'], 'description' => $formData['message']]);
     $data = ['categories' => $categories, 'lots' => $lots, 'lot_time_remaining' => $lot_time_remaining];
 } else {
     $template = 'templates/add_main.php';

@@ -66,4 +66,14 @@ function searchUserByEmail($email, $users)
     return $result;
 }
 
+// функция определения максимальной ставки
+function getMaxBet($bets)
+{
+    $betPrice = [];
+    foreach ($bets as $key => $value) {
+        $betPrice[] = $bets[$key]['price'];
+    }
+    return max($betPrice);
+}
+
 ?>
