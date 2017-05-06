@@ -22,15 +22,48 @@ if (!isset($lots[$lotId])) {
     exit;
 }
 
-$current_lot = $lots[$lotId];
+// получение массива ставок
+$mybets = decodeCookie('mybets');
 
-// ставки пользователей, которыми надо заполнить таблицу
-$bets = [
-    ['name' => 'Иван', 'price' => 11500, 'ts' => strtotime('-' . rand(1, 50) .' minute')],
-    ['name' => 'Константин', 'price' => 11000, 'ts' => strtotime('-' . rand(1, 18) .' hour')],
-    ['name' => 'Евгений', 'price' => 10500, 'ts' => strtotime('-' . rand(25, 50) .' hour')],
-    ['name' => 'Семён', 'price' => 10000, 'ts' => strtotime('last week')]
-];
+$current_lot = $lots[$lotId];
+$current_lot['id'] = $lotId;
+$current_lot['no-bet'] = true;
+$current_lot['class'] = '';
+$current_lot['message'] = '';
+$current_lot['min-bet'] = getMaxBet($bets) + $current_lot['step'];
+
+foreach ($mybets as $key => $value) {
+    if ($lotId == $value['id']) {
+        $current_lot['no-bet'] = false;
+        break;
+    }
+}
+
+if (isset($_POST['cost'])) {
+
+    if (empty($_POST['cost'])) {
+        $current_lot['class'] = 'form__item--invalid';
+        $current_lot['message'] = 'Заполните это поле';
+    } elseif (!is_numeric($_POST['cost'])) {
+        $current_lot['class'] = 'form__item--invalid';
+        $current_lot['message'] = 'Введите числовое значение';
+    } elseif ($_POST['cost'] < $current_lot['min-bet']) {
+        $current_lot['class'] = 'form__item--invalid';
+        $current_lot['message'] = 'Минимальная ставка '.$current_lot['min-bet'];
+    } else {
+        $mybets[] = ['id' => $lotId, 'cost' => $_POST['cost'], 'ts' => time()];
+
+        $name = 'mybets';
+        $value = json_encode($mybets);
+        $expire = strtotime("+30 days");
+        $path = '/';
+
+        setcookie($name, $value, $expire, $path);
+
+        header("Location: mylots.php");
+        exit;
+    }
+}
 
 ?>
 

@@ -1,17 +1,14 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user'])) {
-    header("HTTP/1.0 403 Forbidden");
-    echo "Доступ запрещен";
-    exit;
-}
-
 // подключение файла с функциями
 require_once 'functions.php';
 
 // подключение файла с данными
 require_once 'data.php';
+
+// проверка аутентификации
+requireAuthentication();
 
 // массив для данных из формы
 $formData = [
@@ -72,7 +69,7 @@ if (isset($_POST['send'])) {
 // проверка, что форма заполнена полностью
 if (isset($_POST['send']) && empty($formClasses['form'])) {
     $template = 'templates/main.php';
-    array_unshift($lots, ['name' => $formData['lot-name'], 'category' => $categories[$formData['category']-1], 'price' => $formData['lot-rate'], 'image' => $formData['lot-image']]);
+    array_unshift($lots, ['name' => $formData['lot-name'], 'category' => $categories[$formData['category']-1], 'price' => $formData['lot-rate'], 'image' => $formData['lot-image'], 'description' => $formData['message']]);
     $data = ['categories' => $categories, 'lots' => $lots, 'lot_time_remaining' => $lot_time_remaining];
 } else {
     $template = 'templates/add_main.php';

@@ -66,4 +66,33 @@ function searchUserByEmail($email, $users)
     return $result;
 }
 
+// функция определения максимальной ставки
+function getMaxBet($bets)
+{
+    $betPrice = array_map(function($b) { return $b['price']; }, $bets);
+    return (count($betPrice)) ? max($betPrice) : 0;
+}
+
+// функция проверки аутентификации
+function requireAuthentication()
+{
+    if (!isset($_SESSION['user'])) {
+        header("HTTP/1.0 403 Forbidden");
+        echo "Доступ запрещен";
+        exit;
+    }
+}
+
+// функция чтения Cookie
+function decodeCookie($name)
+{
+    if (isset($_COOKIE[$name])) {
+        $result = json_decode($_COOKIE[$name], true);
+    } else {
+        $result = [];
+    }
+
+    return $result;
+}
+
 ?>
