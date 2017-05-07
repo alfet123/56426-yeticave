@@ -12,7 +12,6 @@ create table `lot` (
   `price` decimal not null,
   `date_expire` datetime not null,
   `step` decimal not null,
-  `likes` int unsigned not null default 0,
   `owner` int unsigned not null,
   `winner` int unsigned,
   `category` int unsigned not null

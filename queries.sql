@@ -12,8 +12,8 @@ select `name` from `category`;
     - название категории  */
 
 select `lot.id`, `lot.name`, `lot.price`, `lot.image`, max(`bet.price`), count(`bet.id`), `category.name`
-from (`lot`
-join `category` on `lot.category` = `category.id`)
+from `lot`
+join `category` on `lot.category` = `category.id`
 join `bet` on `lot.id` = `bet.lot`
 where now() < `lot.date_expire` and `lot.winner` is null
 group by `lot.id`
