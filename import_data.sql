@@ -106,6 +106,8 @@ insert into `lot` set
 /* Ставки */
 
 insert into `bet` set `date` = now(), `price` = '10000', `user` = '2', `lot` = '1';
-insert into `bet` set `date` = now(), `price` = '10500', `user` = '2', `lot` = '1';
+insert into `bet` set `date` = now(), `price` = '10500', `user` = '3', `lot` = '1';
 insert into `bet` set `date` = now(), `price` = '11000', `user` = '2', `lot` = '1';
-insert into `bet` set `date` = now(), `price` = '11500', `user` = '2', `lot` = '1';
+insert into `bet` set `date` = now(), `price` = '11500', `user` = '3', `lot` = '1';
+insert into `bet` set `date` = now(), `price` = '12000', `user` = '2', `lot` = '1';
+insert into `bet` set `date` = now(), `price` = '12500', `user` = '3', `lot` = '1';
