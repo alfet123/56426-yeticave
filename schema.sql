@@ -12,7 +12,6 @@ create table `lot` (
   `price` decimal not null,
   `date_expire` datetime not null,
   `step` decimal not null,
-  `likes` int unsigned not null default 0,
   `owner` int unsigned not null,
   `winner` int unsigned,
   `category` int unsigned not null
@@ -31,7 +30,7 @@ create table `user` (
   `date_reg` datetime not null,
   `email` char(32) not null,
   `name` char(64) not null,
-  `password` char(32) not null,
+  `password` char(64) not null,
   `avatar` char(255),
   `contacts` char(64) not null
 );
