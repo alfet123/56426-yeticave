@@ -4,17 +4,19 @@ select `name` from `category`;
 
 /*  получить самые новые, открытые лоты
     каждый лот должен включать:
-    + название,
-    + стартовую цену,
-    + ссылку на изображение,
+    - название,
+    - стартовую цену,
+    - ссылку на изображение,
     - цену,
     - количество ставок,
-    + название категории  */
+    - название категории  */
 
-select `lot.name`, `lot.price`, `lot.image`, max(`bet.price`), count(`bet.id`), `category.name`
-from (`lot` join `category` on `lot.category` = `category.id`) join `bet` on `lot.id` = `bet.lot`
-where now() < `lot.date_expire`
-group by `lot.name`, `lot.price`, `lot.image`, `lot.date_create`, `category.name`
+select `lot.id`, `lot.name`, `lot.price`, `lot.image`, max(`bet.price`), count(`bet.id`), `category.name`
+from (`lot`
+join `category` on `lot.category` = `category.id`)
+join `bet` on `lot.id` = `bet.lot`
+where now() < `lot.date_expire` and `lot.winner` is null
+group by `lot.id`
 order by `lot.date_create` desc
 limit 3;
 
@@ -50,5 +52,6 @@ insert into `bet` set
 /*  получить список ставок для лота по его идентификатору  */
 
 select `bet.date`, `bet.price`, `user.name`
-from `bet` join `user` on `bet.user` = `user.id`
+from `bet`
+join `user` on `bet.user` = `user.id`
 where `bet.lot` = '3';
