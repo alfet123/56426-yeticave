@@ -1,5 +1,8 @@
 <?php
 
+// подключение файла с вспомогательной функцией
+require_once 'mysql_helper.php';
+
 // функция обеспечивает защиту от XSS
 function dataFiltering($data)
 {
@@ -93,6 +96,34 @@ function decodeCookie($name)
     }
 
     return $result;
+}
+
+// функция для получения данных
+function getData($link, $sql, $data = [])
+{
+
+}
+
+// функция для добавления данных
+function insertData($link, $sql, $data)
+{
+    $stmt = db_get_prepare_stmt($link, $sql, $data);
+
+    if (mysqli_stmt_execute($stmt)) {
+        $result = mysqli_stmt_insert_id($stmt);
+    } else {
+        $result = false;
+    }
+
+    mysqli_stmt_close($stmt);
+
+    return $result;
+}
+
+// функция для обновления данных
+function updateData($link, $table, $data, $conditions)
+{
+
 }
 
 ?>
