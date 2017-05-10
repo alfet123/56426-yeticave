@@ -111,7 +111,7 @@ function getData($link, $sql, $data = [])
 
             $res = mysqli_stmt_get_result($stmt);
 
-            while ($row = mysqli_fetch_array($res, MYSQLI_NUM)) {
+            while ($row = mysqli_fetch_array($res, MYSQLI_ASSOC)) {
                 $result[] = $row;
             }
 
