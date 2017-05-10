@@ -1,5 +1,8 @@
 <?php
 
+// подключение файла с вспомогательной функцией
+require_once 'mysql_helper.php';
+
 // функция обеспечивает защиту от XSS
 function dataFiltering($data)
 {
@@ -90,6 +93,93 @@ function decodeCookie($name)
         $result = json_decode($_COOKIE[$name], true);
     } else {
         $result = [];
+    }
+
+    return $result;
+}
+
+// функция для получения данных
+function getData($link, $sql, $data = [])
+{
+    $result = [];
+
+    $stmt = db_get_prepare_stmt($link, $sql, $data);
+
+    if ($stmt) {
+
+        if (mysqli_stmt_execute($stmt)) {
+
+            $res = mysqli_stmt_get_result($stmt);
+
+            while ($row = mysqli_fetch_array($res, MYSQLI_ASSOC)) {
+                $result[] = $row;
+            }
+
+        }
+
+        mysqli_stmt_close($stmt);
+
+    }
+
+    return $result;
+}
+
+// функция для добавления данных
+function insertData($link, $sql, $data)
+{
+    $result = false;
+
+    $stmt = db_get_prepare_stmt($link, $sql, $data);
+
+    if ($stmt) {
+
+        if (mysqli_stmt_execute($stmt)) {
+            $result = mysqli_stmt_insert_id($stmt);
+        }
+
+        mysqli_stmt_close($stmt);
+
+    }
+
+    return $result;
+}
+
+// функция создания фрагмента запроса
+function sqlFragment($data, $separator, &$values)
+{
+    $pairs = [];
+    foreach ($data as $key => $value) {
+        $pairs[] = "`".$key."` = ?";
+        $values[] = $value;
+    }
+    return implode($separator, $pairs);
+}
+
+// функция для обновления данных
+function updateData($link, $table, $data, $conditions)
+{
+    $result = false;
+
+    $values = [];
+
+    $sql = "update `".$table."` set ";
+
+    $sql .= sqlFragment($data, ", ", $values);
+
+    if (!empty($conditions)) {
+        $sql .= " where ".sqlFragment($conditions, " and ", $values);
+    }
+
+    $stmt = db_get_prepare_stmt($link, $sql, $values);
+
+    if ($stmt) {
+
+        if (mysqli_stmt_execute($stmt)) {
+            $result = mysqli_stmt_affected_rows($stmt);
+        }
+
+        mysqli_stmt_close($stmt);
+
     }
 
     return $result;
