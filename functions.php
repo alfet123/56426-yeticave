@@ -101,21 +101,45 @@ function decodeCookie($name)
 // функция для получения данных
 function getData($link, $sql, $data = [])
 {
+    $result = [];
 
+    $stmt = db_get_prepare_stmt($link, $sql, $data);
+
+    if ($stmt) {
+
+        if (mysqli_stmt_execute($stmt)) {
+
+            $res = mysqli_stmt_get_result($stmt);
+
+            while ($row = mysqli_fetch_array($res, MYSQLI_NUM)) {
+                $result[] = $row;
+            }
+
+        }
+
+        mysqli_stmt_close($stmt);
+
+    }
+
+    return $result;
 }
 
 // функция для добавления данных
 function insertData($link, $sql, $data)
 {
+    $result = false;
+
     $stmt = db_get_prepare_stmt($link, $sql, $data);
 
-    if (mysqli_stmt_execute($stmt)) {
-        $result = mysqli_stmt_insert_id($stmt);
-    } else {
-        $result = false;
-    }
+    if ($stmt) {
 
-    mysqli_stmt_close($stmt);
+        if (mysqli_stmt_execute($stmt)) {
+            $result = mysqli_stmt_insert_id($stmt);
+        }
+
+        mysqli_stmt_close($stmt);
+
+    }
 
     return $result;
 }
