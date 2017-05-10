@@ -4,8 +4,13 @@ session_start();
 // подключение файла с функциями
 require_once 'functions.php';
 
-// подключение файла с данными
-require_once 'data.php';
+$link = dbConnect($db);
+
+if ($link) {
+    $categories = getCategories($link);
+    $lots = getLots($link);
+    mysqli_close($link);
+}
 
 ?>
 <!DOCTYPE html>

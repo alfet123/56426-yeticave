@@ -44,19 +44,27 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // аутентификация
-    if ($user = getUserByEmail($email)) {
-        if (password_verify($password, $user['password'])) {
-            $_SESSION['user'] = $user;
-            header("Location: /");
-            exit;
+    $link = dbConnect($db);
+
+    if ($link) {
+
+        // аутентификация
+        if ($user = getUserByEmail($link, $email)) {
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['user'] = $user;
+                mysqli_close($link);
+                header("Location: /");
+                exit;
+            } else {
+                $formData['password'] = '';
+                setFormError($formClasses, $formMessages, 'password', 'Вы ввели неверный пароль');
+            }
         } else {
-            $formData['password'] = '';
-            setFormError($formClasses, $formMessages, 'password', 'Вы ввели неверный пароль');
+            $formData['email'] = '';
+            setFormError($formClasses, $formMessages, 'email', 'Вы ввели неверный e-mail');
         }
-    } else {
-        $formData['email'] = '';
-        setFormError($formClasses, $formMessages, 'email', 'Вы ввели неверный e-mail');
+
+        mysqli_close($link);
     }
 
 }
