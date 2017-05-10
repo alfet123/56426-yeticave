@@ -10,9 +10,6 @@ require_once 'data.php';
 // проверка аутентификации
 requireAuthentication();
 
-// получение массива ставок
-$mybets = decodeCookie('mybets');
-
 ?>
 <!DOCTYPE html>
 <html lang="ru">

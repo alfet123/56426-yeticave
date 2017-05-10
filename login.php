@@ -4,12 +4,6 @@ session_start();
 // подключение файла с функциями
 require_once 'functions.php';
 
-// подключение файла с данными
-require_once 'data.php';
-
-// подключение файла с пользователями
-require_once 'userdata.php';
-
 // массив для данных из формы
 $formData = [
     'email' => '',
@@ -51,7 +45,7 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
     $password = $_POST['password'];
 
     // аутентификация
-    if ($user = searchUserByEmail($email, $users)) {
+    if ($user = getUserByEmail($email)) {
         if (password_verify($password, $user['password'])) {
             $_SESSION['user'] = $user;
             header("Location: /");

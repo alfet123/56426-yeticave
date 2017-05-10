@@ -22,9 +22,6 @@ if (!isset($lots[$lotId])) {
     exit;
 }
 
-// получение массива ставок
-$mybets = decodeCookie('mybets');
-
 $current_lot = $lots[$lotId];
 $current_lot['id'] = $lotId;
 $current_lot['no-bet'] = true;
@@ -52,13 +49,6 @@ if (isset($_POST['cost'])) {
         $current_lot['message'] = 'Минимальная ставка '.$current_lot['min-bet'];
     } else {
         $mybets[] = ['id' => $lotId, 'cost' => $_POST['cost'], 'ts' => time()];
-
-        $name = 'mybets';
-        $value = json_encode($mybets);
-        $expire = strtotime("+30 days");
-        $path = '/';
-
-        setcookie($name, $value, $expire, $path);
 
         header("Location: mylots.php");
         exit;

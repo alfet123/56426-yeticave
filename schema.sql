@@ -1,3 +1,5 @@
+use yeticave;
+
 create table `category` (
   `id` int unsigned not null auto_increment primary key,
   `name` char(32) not null

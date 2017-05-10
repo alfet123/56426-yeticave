@@ -56,16 +56,10 @@ function setFormError(&$formClasses, &$formMessages, $field, $message)
     $formMessages[$field] = $message;
 }
 
-// функция поиска пользователя по e-mail
-function searchUserByEmail($email, $users)
+// функция получения пользователя по e-mail
+function getUserByEmail($email)
 {
     $result = null;
-    foreach ($users as $user) {
-        if ($user['email'] == $email) {
-            $result = $user;
-            break;
-        }
-    }
     return $result;
 }
 
@@ -84,18 +78,6 @@ function requireAuthentication()
         echo "Доступ запрещен";
         exit;
     }
-}
-
-// функция чтения Cookie
-function decodeCookie($name)
-{
-    if (isset($_COOKIE[$name])) {
-        $result = json_decode($_COOKIE[$name], true);
-    } else {
-        $result = [];
-    }
-
-    return $result;
 }
 
 // функция для получения данных
