@@ -84,7 +84,7 @@ if ($link) {
 </head>
 <body>
 
-<?=includeTemplate('templates/header.php', []); ?>
+<?=includeTemplate('templates/header.php', ['avatar' => setAvatar()]); ?>
 
 <?=includeTemplate('templates/lot_main.php', ['categories' => $categories, 'lot' => $current_lot, 'lot_time_remaining' => $lot_time_remaining, 'bets' => $bets]); ?>
 

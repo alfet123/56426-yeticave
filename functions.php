@@ -36,6 +36,16 @@ function includeTemplate($file, $data)
     return $result;
 }
 
+// функция установки аватара
+function setAvatar()
+{
+    if (isset($_SESSION['user']) && !empty($_SESSION['user']['avatar'])) {
+        return $_SESSION['user']['avatar'];
+    } else {
+        return 'img/user.jpg';
+    }
+}
+
 // функция выводит время в относительном формате
 function timeInRelativeFormat($ts)
 {
@@ -229,7 +239,6 @@ function getBetsByLot($link, $lot)
 }
 
 // функция получения списка ставок по пользователю с сортировкой по убыванию даты
-// картинка, название, категория, макс. цена, время ставки
 function getBetsByUser($link, $user)
 {
     $sql  = 'select lot.id, lot.image, lot.name as name, category.name as category, max(bet.price) as price, bet.date ';
@@ -270,6 +279,22 @@ function newBet($link, $bet)
     $sql .= 'lot = ?';
 
     return insertData($link, $sql, $bet);
+}
+
+// функция добавления пользователя
+function newUser($link, $user)
+{
+    $sql  = 'insert into user set ';
+    $sql .= 'date_reg = ?, ';
+    $sql .= 'email = ?, ';
+    $sql .= 'name = ?, ';
+    $sql .= 'password = ?, ';
+    if (count($user) == 6) {
+        $sql .= 'avatar = ?, ';
+    }
+    $sql .= 'contacts = ?';
+
+    return insertData($link, $sql, $user);
 }
 
 ?>
