@@ -70,8 +70,7 @@ function getMaxBet($bets)
 function requireAuthentication()
 {
     if (!isset($_SESSION['user'])) {
-        header("HTTP/1.0 403 Forbidden");
-        echo "Доступ запрещен";
+        header("Location: login.php");
         exit;
     }
 }
@@ -242,6 +241,23 @@ function getBetsByUser($link, $user)
     $sql .= 'order by bet.date desc';
 
     return getData($link, $sql, [$user]);
+}
+
+// функция добавления лота
+function newLot($link, $lot)
+{
+    $sql  = 'insert into lot set ';
+    $sql .= 'date_create = ?, ';
+    $sql .= 'name = ?, ';
+    $sql .= 'description = ?, ';
+    $sql .= 'image = ?, ';
+    $sql .= 'price = ?, ';
+    $sql .= 'date_expire = ?, ';
+    $sql .= 'step = ?, ';
+    $sql .= 'owner = ?, ';
+    $sql .= 'category = ?';
+
+    return insertData($link, $sql, $lot);
 }
 
 // функция добавления ставки

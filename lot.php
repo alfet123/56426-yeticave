@@ -58,11 +58,11 @@ if ($link) {
             $current_lot['class'] = 'form__item--invalid';
             $current_lot['message'] = 'Минимальная ставка '.$current_lot['min-bet'];
         } else {
-            $betDate = date("Y-m-d H:i:s");
-            $betPrice = htmlspecialchars($_POST['cost']);
-            $betUser = $_SESSION['user']['id'];
-            $betLot = $current_lot['id'];
-            newBet($link, [$betDate, $betPrice, $betUser, $betLot]);
+            $betData   = [date("Y-m-d H:i:s")];
+            $betData[] = htmlspecialchars($_POST['cost']);
+            $betData[] = $_SESSION['user']['id'];
+            $betData[] = $current_lot['id'];
+            newBet($link, $betData);
             mysqli_close($link);
             header("Location: mylots.php");
             exit;

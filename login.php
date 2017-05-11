@@ -4,6 +4,13 @@ session_start();
 // подключение файла с функциями
 require_once 'functions.php';
 
+$link = dbConnect($db);
+
+if ($link) {
+    $categories = getCategories($link);
+    mysqli_close($link);
+}
+
 // массив для данных из формы
 $formData = [
     'email' => '',
