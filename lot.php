@@ -11,15 +11,14 @@ if (!isset($_GET['id'])) {
     exit;
 }
 
-// если передали несуществующий id, то тоже 404
-$lotId = htmlspecialchars($_GET['id']);
-
 $link = dbConnect($db);
 
 if ($link) {
     $categories = getCategories($link);
-    $lots = getLots($link, [$lotId]);
 
+    $lots = getLots($link, [htmlspecialchars($_GET['id'])]);
+
+    // если передали несуществующий id, то тоже 404
     if (empty($lots)) {
         header("HTTP/1.0 404 Not Found");
         echo "Bad id";
@@ -31,18 +30,21 @@ if ($link) {
 
     $bets = getBetsByLot($link, $current_lot['id']);
 
-    $current_lot['no-bet'] = true;
-    $current_lot['class'] = '';
-    $current_lot['message'] = '';
     $current_lot['curr-bet'] = (count($bets)) ? getMaxBet($bets) : $current_lot['price'];
-    $current_lot['min-bet'] = $current_lot['curr-bet'] + $current_lot['step'];
+    $current_lot['min-bet'] = $current_lot['curr-bet'] + ((count($bets)) ? $current_lot['step'] : 0);
 
-    foreach ($bets as $key => $value) {
-        if ($lotId == $value['id']) {
+    // по умолчанию разрешается делать ставку
+    $current_lot['no-bet'] = true;
+
+    // если открыт сеанс и есть ставки, проверка кто сделал последнюю ставку
+    if (isset($_SESSION['user']) && count($bets)) {
+        if (($_SESSION['user']['id'] == $bets[0]['id'])) {
             $current_lot['no-bet'] = false;
-            break;
         }
     }
+
+    $current_lot['class'] = '';
+    $current_lot['message'] = '';
 
     if (isset($_POST['cost'])) {
 
@@ -56,8 +58,12 @@ if ($link) {
             $current_lot['class'] = 'form__item--invalid';
             $current_lot['message'] = 'Минимальная ставка '.$current_lot['min-bet'];
         } else {
-            $mybets[] = ['id' => $lotId, 'cost' => $_POST['cost'], 'ts' => time()];
-
+            $betDate = date("Y-m-d H:i:s");
+            $betPrice = htmlspecialchars($_POST['cost']);
+            $betUser = $_SESSION['user']['id'];
+            $betLot = $current_lot['id'];
+            newBet($link, [$betDate, $betPrice, $betUser, $betLot]);
+            mysqli_close($link);
             header("Location: mylots.php");
             exit;
         }

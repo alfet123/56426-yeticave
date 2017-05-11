@@ -15,21 +15,21 @@
             <tr class="rates__item">
                 <td class="rates__info">
                     <div class="rates__img">
-                        <img src="../<?=$lots[$value['id']]['image'];?>" width="54" height="40" alt="Сноуборд">
+                        <img src="../<?=$value['image'];?>" width="54" height="40" alt="Сноуборд">
                     </div>
-                    <h3 class="rates__title"><a href="lot.php?id=<?=$value['id'];?>"><?=$lots[$value['id']]['name'];?></a></h3>
+                    <h3 class="rates__title"><a href="lot.php?id=<?=$value['id'];?>"><?=$value['name'];?></a></h3>
                 </td>
                 <td class="rates__category">
-                    <?=$lots[$value['id']]['category'];?>
+                    <?=$value['category'];?>
                 </td>
                 <td class="rates__timer">
                     <div class="timer timer--finishing"><?=$lot_time_remaining;?></div>
                 </td>
                 <td class="rates__price">
-                    <?=$value['cost'];?>
+                    <?=$value['price'];?>
                 </td>
                 <td class="rates__time">
-                    <?=timeInRelativeFormat($value['ts']);?>
+                    <?=timeInRelativeFormat(strtotime($value['date']));?>
                 </td>
             </tr>
             <?php endforeach; ?>

@@ -220,7 +220,7 @@ function getLots($link, $lot = [])
 // функция получения списка ставок по лоту с сортировкой по убыванию цены
 function getBetsByLot($link, $lot)
 {
-    $sql  = 'select bet.date, bet.price, user.name ';
+    $sql  = 'select bet.date, bet.price, user.id, user.name ';
     $sql .= 'from bet ';
     $sql .= 'join user on bet.user = user.id ';
     $sql .= 'where bet.lot = ? ';
@@ -233,7 +233,7 @@ function getBetsByLot($link, $lot)
 // картинка, название, категория, макс. цена, время ставки
 function getBetsByUser($link, $user)
 {
-    $sql  = 'select lot.id, lot.image, lot.name, category.name, max(bet.price), bet.date ';
+    $sql  = 'select lot.id, lot.image, lot.name as name, category.name as category, max(bet.price) as price, bet.date ';
     $sql .= 'from lot ';
     $sql .= 'join category on lot.category = category.id ';
     $sql .= 'join bet on lot.id = bet.lot ';
@@ -242,6 +242,18 @@ function getBetsByUser($link, $user)
     $sql .= 'order by bet.date desc';
 
     return getData($link, $sql, [$user]);
+}
+
+// функция добавления ставки
+function newBet($link, $bet)
+{
+    $sql  = 'insert into bet set ';
+    $sql .= 'date = ?, ';
+    $sql .= 'price = ?, ';
+    $sql .= 'user = ?, ';
+    $sql .= 'lot = ?';
+
+    return insertData($link, $sql, $bet);
 }
 
 ?>
