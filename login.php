@@ -88,7 +88,7 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
 </head>
 <body>
 
-<?=includeTemplate('templates/header.php', ['avatar' => setAvatar()]); ?>
+<?=includeTemplate('templates/header.php', ['avatar' => getAvatar()]); ?>
 
 <?=includeTemplate('templates/login_main.php', ['categories' => $categories, 'data' => $formData, 'class' => $formClasses, 'message' => $formMessages]); ?>
 

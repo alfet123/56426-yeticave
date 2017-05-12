@@ -8,7 +8,7 @@
             <?php endforeach; ?>
         </ul>
     </nav>
-    <form class="form container <?=$class['form'];?>" action="signup.php" method="post"> <!-- form--invalid -->
+    <form class="form container <?=$class['form'];?>" action="signup.php" method="post" enctype="multipart/form-data"> <!-- form--invalid -->
         <h2>Регистрация нового аккаунта</h2>
         <div class="form__item <?=$class['email'];?>"> <!-- form__item--invalid -->
             <label for="email">E-mail*</label>

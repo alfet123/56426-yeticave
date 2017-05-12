@@ -54,8 +54,8 @@ if ($link) {
         }
 
         // cохранение загруженного файла
-        if (isset($_FILES['image'])) {
-            $file = $_FILES['image'];
+        if (isset($_FILES['avatar'])) {
+            $file = $_FILES['avatar'];
             $filename = $file['name'];
             $source = $file['tmp_name'];
             $target = "img/$filename";
@@ -66,19 +66,22 @@ if ($link) {
     // проверка, что форма заполнена полностью
     if (isset($_POST['send']) && empty($formClasses['form'])) {
         // Добавление пользователя
-        $userData   = [date("Y-m-d H:i:s")];
-        $userData[] = $formData['email'];
-        $userData[] = $formData['name'];
-        $userData[] = password_hash($formData['password'], PASSWORD_DEFAULT);
+        $userData = [];
+        $userData['date_reg'] = date("Y-m-d H:i:s");
+        $userData['email'] = $formData['email'];
+        $userData['name'] = $formData['name'];
+        $userData['password'] = password_hash($formData['password'], PASSWORD_DEFAULT);
         if ($fileMoved) {
-            $userData[] = $target;
+            $userData['avatar'] = $target;
         }
-        $userData[] = $formData['contacts'];
+        $userData['contacts'] = $formData['contacts'];
 
-        newUser($link, $userData);
+        $userId = newUser($link, $userData);
+
+        $_SESSION['user'] = getUserById($link, $userId);
 
         mysqli_close($link);
-        header("Location: login.php");
+        header("Location: index.php");
         exit;
     }
 
@@ -97,7 +100,7 @@ if ($link) {
 </head>
 <body>
 
-<?=includeTemplate('templates/header.php', ['avatar' => setAvatar()]); ?>
+<?=includeTemplate('templates/header.php', ['avatar' => getAvatar()]); ?>
 
 <?=includeTemplate('templates/signup_main.php', ['categories' => $categories, 'data' => $formData, 'class' => $formClasses, 'message' => $formMessages]); ?>
 

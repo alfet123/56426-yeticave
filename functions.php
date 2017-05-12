@@ -36,8 +36,8 @@ function includeTemplate($file, $data)
     return $result;
 }
 
-// функция установки аватара
-function setAvatar()
+// функция получения аватара
+function getAvatar()
 {
     if (isset($_SESSION['user']) && !empty($_SESSION['user']['avatar'])) {
         return $_SESSION['user']['avatar'];
@@ -201,6 +201,22 @@ function getUserByEmail($link, $email)
     return $result;
 }
 
+// функция получения пользователя по Id
+function getUserById($link, $userId)
+{
+    $result = null;
+
+    $sql = 'select * from `user` where `id` = ? limit 1';
+
+    $data = getData($link, $sql, [$userId]);
+
+    if (!empty($data)) {
+        $result = $data[0];
+    }
+
+    return $result;
+}
+
 // функция получения категорий
 function getCategories($link)
 {
@@ -209,25 +225,40 @@ function getCategories($link)
     return getData($link, $sql, []);
 }
 
-// функция получения списка лотов или одного лота
-function getLots($link, $lot = [])
+// функция получения лотов
+function getLots($link)
 {
     $sql  = 'select lot.id, lot.name, lot.description, lot.image, lot.price, lot.step, category.name as category ';
     $sql .= 'from lot ';
     $sql .= 'join category on lot.category = category.id ';
-    if (!empty($lot)) {
-        $sql .= 'where lot.id = ? ';
-    }
     $sql .= 'order by date_create desc';
-    if (!empty($lot)) {
-        $sql .= ' limit 1';
+
+    return getData($link, $sql, []);
+}
+
+// функция получения лота по Id
+function getLotById($link, $lotId)
+{
+    $result = null;
+
+    $sql  = 'select lot.id, lot.name, lot.description, lot.image, lot.price, lot.step, category.name as category ';
+    $sql .= 'from lot ';
+    $sql .= 'join category on lot.category = category.id ';
+    $sql .= 'where lot.id = ? ';
+    $sql .= 'order by date_create desc ';
+    $sql .= 'limit 1';
+
+    $data = getData($link, $sql, [$lotId]);
+
+    if (!empty($data)) {
+        $result = $data[0];
     }
 
-    return getData($link, $sql, $lot);
+    return $result;
 }
 
 // функция получения списка ставок по лоту с сортировкой по убыванию цены
-function getBetsByLot($link, $lot)
+function getBetsByLot($link, $lotId)
 {
     $sql  = 'select bet.date, bet.price, user.id, user.name ';
     $sql .= 'from bet ';
@@ -235,11 +266,11 @@ function getBetsByLot($link, $lot)
     $sql .= 'where bet.lot = ? ';
     $sql .= 'order by bet.price desc';
 
-    return getData($link, $sql, [$lot]);
+    return getData($link, $sql, [$lotId]);
 }
 
 // функция получения списка ставок по пользователю с сортировкой по убыванию даты
-function getBetsByUser($link, $user)
+function getBetsByUser($link, $userId)
 {
     $sql  = 'select lot.id, lot.image, lot.name as name, category.name as category, max(bet.price) as price, bet.date ';
     $sql .= 'from lot ';
@@ -249,11 +280,11 @@ function getBetsByUser($link, $user)
     $sql .= 'group by lot.id, bet.id ';
     $sql .= 'order by bet.date desc';
 
-    return getData($link, $sql, [$user]);
+    return getData($link, $sql, [$userId]);
 }
 
 // функция добавления лота
-function newLot($link, $lot)
+function newLot($link, array $lot)
 {
     $sql  = 'insert into lot set ';
     $sql .= 'date_create = ?, ';
@@ -270,7 +301,7 @@ function newLot($link, $lot)
 }
 
 // функция добавления ставки
-function newBet($link, $bet)
+function newBet($link, array $bet)
 {
     $sql  = 'insert into bet set ';
     $sql .= 'date = ?, ';
@@ -282,19 +313,15 @@ function newBet($link, $bet)
 }
 
 // функция добавления пользователя
-function newUser($link, $user)
+function newUser($link, array $userData)
 {
-    $sql  = 'insert into user set ';
-    $sql .= 'date_reg = ?, ';
-    $sql .= 'email = ?, ';
-    $sql .= 'name = ?, ';
-    $sql .= 'password = ?, ';
-    if (count($user) == 6) {
-        $sql .= 'avatar = ?, ';
-    }
-    $sql .= 'contacts = ?';
+    $values = [];
 
-    return insertData($link, $sql, $user);
+    $sql  = 'insert into user set ';
+
+    $sql .= sqlFragment($userData, ", ", $values);
+
+    return insertData($link, $sql, $values);
 }
 
 ?>

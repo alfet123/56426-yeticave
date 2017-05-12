@@ -1,3 +1,5 @@
+drop database if exists yeticave;
+create database yeticave;
 use yeticave;
 
 create table `category` (

@@ -23,7 +23,7 @@ if ($link) {
 </head>
 <body>
 
-<?=includeTemplate('templates/header.php', ['avatar' => setAvatar()]); ?>
+<?=includeTemplate('templates/header.php', ['avatar' => getAvatar()]); ?>
 
 <?=includeTemplate('templates/main.php', ['categories' => $categories, 'lots' => $lots, 'lot_time_remaining' => $lot_time_remaining]); ?>
 

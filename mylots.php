@@ -26,7 +26,7 @@ if ($link) {
 </head>
 <body>
 
-<?=includeTemplate('templates/header.php', ['avatar' => setAvatar()]); ?>
+<?=includeTemplate('templates/header.php', ['avatar' => getAvatar()]); ?>
 
 <?=includeTemplate('templates/mylots_main.php', ['categories' => $categories, 'mybets' => $mybets, 'lot_time_remaining' => $lot_time_remaining]); ?>
 

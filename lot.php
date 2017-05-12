@@ -14,20 +14,17 @@ if (!isset($_GET['id'])) {
 $link = dbConnect($db);
 
 if ($link) {
-    $categories = getCategories($link);
-
-    $lots = getLots($link, [htmlspecialchars($_GET['id'])]);
+    $current_lot = getLotById($link, htmlspecialchars($_GET['id']));
 
     // если передали несуществующий id, то тоже 404
-    if (empty($lots)) {
+    if (!$current_lot) {
         header("HTTP/1.0 404 Not Found");
         echo "Bad id";
         mysqli_close($link);
         exit;
     }
 
-    $current_lot = $lots[0];
-
+    $categories = getCategories($link);
     $bets = getBetsByLot($link, $current_lot['id']);
 
     $current_lot['curr-bet'] = (count($bets)) ? getMaxBet($bets) : $current_lot['price'];
@@ -84,7 +81,7 @@ if ($link) {
 </head>
 <body>
 
-<?=includeTemplate('templates/header.php', ['avatar' => setAvatar()]); ?>
+<?=includeTemplate('templates/header.php', ['avatar' => getAvatar()]); ?>
 
 <?=includeTemplate('templates/lot_main.php', ['categories' => $categories, 'lot' => $current_lot, 'lot_time_remaining' => $lot_time_remaining, 'bets' => $bets]); ?>
 
