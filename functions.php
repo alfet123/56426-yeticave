@@ -188,33 +188,29 @@ function dbConnect($db)
 // функция получения пользователя по e-mail
 function getUserByEmail($link, $email)
 {
-    $result = null;
-
     $sql = 'select * from `user` where `email` = ? limit 1';
 
     $data = getData($link, $sql, [$email]);
 
     if (!empty($data)) {
-        $result = $data[0];
+        return $data[0];
     }
 
-    return $result;
+    return null;
 }
 
 // функция получения пользователя по Id
 function getUserById($link, $userId)
 {
-    $result = null;
-
-    $sql = 'select * from `user` where `id` = ? limit 1';
+    $sql = 'select * from `user` where `id` = ?';
 
     $data = getData($link, $sql, [$userId]);
 
     if (!empty($data)) {
-        $result = $data[0];
+        return $data[0];
     }
 
-    return $result;
+    return null;
 }
 
 // функция получения категорий
@@ -226,35 +222,29 @@ function getCategories($link)
 }
 
 // функция получения лотов
-function getLots($link)
+function getLots($link, array $ids = [])
 {
     $sql  = 'select lot.id, lot.name, lot.description, lot.image, lot.price, lot.step, category.name as category ';
     $sql .= 'from lot ';
     $sql .= 'join category on lot.category = category.id ';
+    if (!empty($ids)) {
+        $sql .= 'where lot.id in (?) ';
+    }
     $sql .= 'order by date_create desc';
 
-    return getData($link, $sql, []);
+    return getData($link, $sql, $ids);
 }
 
 // функция получения лота по Id
 function getLotById($link, $lotId)
 {
-    $result = null;
-
-    $sql  = 'select lot.id, lot.name, lot.description, lot.image, lot.price, lot.step, category.name as category ';
-    $sql .= 'from lot ';
-    $sql .= 'join category on lot.category = category.id ';
-    $sql .= 'where lot.id = ? ';
-    $sql .= 'order by date_create desc ';
-    $sql .= 'limit 1';
-
-    $data = getData($link, $sql, [$lotId]);
+    $data = getLots($link, [$lotId]);
 
     if (!empty($data)) {
-        $result = $data[0];
+        return $data[0];
     }
 
-    return $result;
+    return null;
 }
 
 // функция получения списка ставок по лоту с сортировкой по убыванию цены
