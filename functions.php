@@ -224,7 +224,7 @@ function getCategories($link)
 // функция получения лотов
 function getLots($link, array $ids = [])
 {
-    $sql  = 'select lot.id, lot.name, lot.description, lot.image, lot.price, lot.step, category.name as category ';
+    $sql  = 'select lot.*, category.name as category ';
     $sql .= 'from lot ';
     $sql .= 'join category on lot.category = category.id ';
     if (!empty($ids)) {
