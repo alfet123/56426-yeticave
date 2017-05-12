@@ -1,5 +1,8 @@
 <?php
 
+// подключение файла с данными
+require_once 'data.php';
+
 // подключение файла с вспомогательной функцией
 require_once 'mysql_helper.php';
 
@@ -33,6 +36,16 @@ function includeTemplate($file, $data)
     return $result;
 }
 
+// функция получения аватара
+function getAvatar()
+{
+    if (isset($_SESSION['user']) && !empty($_SESSION['user']['avatar'])) {
+        return $_SESSION['user']['avatar'];
+    } else {
+        return 'img/user.jpg';
+    }
+}
+
 // функция выводит время в относительном формате
 function timeInRelativeFormat($ts)
 {
@@ -56,19 +69,6 @@ function setFormError(&$formClasses, &$formMessages, $field, $message)
     $formMessages[$field] = $message;
 }
 
-// функция поиска пользователя по e-mail
-function searchUserByEmail($email, $users)
-{
-    $result = null;
-    foreach ($users as $user) {
-        if ($user['email'] == $email) {
-            $result = $user;
-            break;
-        }
-    }
-    return $result;
-}
-
 // функция определения максимальной ставки
 function getMaxBet($bets)
 {
@@ -80,22 +80,9 @@ function getMaxBet($bets)
 function requireAuthentication()
 {
     if (!isset($_SESSION['user'])) {
-        header("HTTP/1.0 403 Forbidden");
-        echo "Доступ запрещен";
+        header("Location: login.php");
         exit;
     }
-}
-
-// функция чтения Cookie
-function decodeCookie($name)
-{
-    if (isset($_COOKIE[$name])) {
-        $result = json_decode($_COOKIE[$name], true);
-    } else {
-        $result = [];
-    }
-
-    return $result;
 }
 
 // функция для получения данных
@@ -183,6 +170,148 @@ function updateData($link, $table, $data, $conditions)
     }
 
     return $result;
+}
+
+// функция для подключения к базе данных
+function dbConnect($db)
+{
+    $link = mysqli_connect($db['host'], $db['user'], $db['pass'], $db['name']);
+
+    if ($link) {
+        mysqli_query($link, "SET NAMES 'utf8'");
+        mysqli_query($link, "SET CHARACTER SET 'utf8'");
+    }
+
+    return $link;
+}
+
+// функция получения пользователя по e-mail
+function getUserByEmail($link, $email)
+{
+    $sql = 'select * from `user` where `email` = ? limit 1';
+
+    $data = getData($link, $sql, [$email]);
+
+    if (!empty($data)) {
+        return $data[0];
+    }
+
+    return null;
+}
+
+// функция получения пользователя по Id
+function getUserById($link, $userId)
+{
+    $sql = 'select * from `user` where `id` = ?';
+
+    $data = getData($link, $sql, [$userId]);
+
+    if (!empty($data)) {
+        return $data[0];
+    }
+
+    return null;
+}
+
+// функция получения категорий
+function getCategories($link)
+{
+    $sql = 'select `id`, `name` from `category` order by `id`';
+
+    return getData($link, $sql, []);
+}
+
+// функция получения лотов
+function getLots($link, array $ids = [])
+{
+    $sql  = 'select lot.*, category.name as category ';
+    $sql .= 'from lot ';
+    $sql .= 'join category on lot.category = category.id ';
+    if (!empty($ids)) {
+        $sql .= 'where lot.id in ('.implode(',', array_fill(0, count($ids), '?')).') ';
+    }
+    $sql .= 'order by date_create desc';
+
+    return getData($link, $sql, $ids);
+}
+
+// функция получения лота по Id
+function getLotById($link, $lotId)
+{
+    $data = getLots($link, [$lotId]);
+
+    if (!empty($data)) {
+        return $data[0];
+    }
+
+    return null;
+}
+
+// функция получения списка ставок по лоту с сортировкой по убыванию цены
+function getBetsByLot($link, $lotId)
+{
+    $sql  = 'select bet.date, bet.price, user.id, user.name ';
+    $sql .= 'from bet ';
+    $sql .= 'join user on bet.user = user.id ';
+    $sql .= 'where bet.lot = ? ';
+    $sql .= 'order by bet.price desc';
+
+    return getData($link, $sql, [$lotId]);
+}
+
+// функция получения списка ставок по пользователю с сортировкой по убыванию даты
+function getBetsByUser($link, $userId)
+{
+    $sql  = 'select lot.id, lot.image, lot.name as name, category.name as category, max(bet.price) as price, bet.date ';
+    $sql .= 'from lot ';
+    $sql .= 'join category on lot.category = category.id ';
+    $sql .= 'join bet on lot.id = bet.lot ';
+    $sql .= 'where bet.user = ? ';
+    $sql .= 'group by lot.id, bet.id ';
+    $sql .= 'order by bet.date desc';
+
+    return getData($link, $sql, [$userId]);
+}
+
+// функция добавления лота
+function newLot($link, array $lot)
+{
+    $sql  = 'insert into lot set ';
+    $sql .= 'date_create = ?, ';
+    $sql .= 'name = ?, ';
+    $sql .= 'description = ?, ';
+    $sql .= 'image = ?, ';
+    $sql .= 'price = ?, ';
+    $sql .= 'date_expire = ?, ';
+    $sql .= 'step = ?, ';
+    $sql .= 'owner = ?, ';
+    $sql .= 'category = ?';
+
+    return insertData($link, $sql, $lot);
+}
+
+// функция добавления ставки
+function newBet($link, array $bet)
+{
+    $sql  = 'insert into bet set ';
+    $sql .= 'date = ?, ';
+    $sql .= 'price = ?, ';
+    $sql .= 'user = ?, ';
+    $sql .= 'lot = ?';
+
+    return insertData($link, $sql, $bet);
+}
+
+// функция добавления пользователя
+function newUser($link, array $userData)
+{
+    $values = [];
+
+    $sql  = 'insert into user set ';
+
+    $sql .= sqlFragment($userData, ", ", $values);
+
+    return insertData($link, $sql, $values);
 }
 
 ?>

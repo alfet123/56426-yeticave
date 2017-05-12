@@ -4,8 +4,13 @@ session_start();
 // подключение файла с функциями
 require_once 'functions.php';
 
-// подключение файла с данными
-require_once 'data.php';
+$link = dbConnect($db);
+
+if ($link) {
+    $categories = getCategories($link);
+    $lots = getLots($link);
+    mysqli_close($link);
+}
 
 ?>
 <!DOCTYPE html>
@@ -18,7 +23,7 @@ require_once 'data.php';
 </head>
 <body>
 
-<?=includeTemplate('templates/header.php', []); ?>
+<?=includeTemplate('templates/header.php', ['avatar' => getAvatar()]); ?>
 
 <?=includeTemplate('templates/main.php', ['categories' => $categories, 'lots' => $lots, 'lot_time_remaining' => $lot_time_remaining]); ?>
 

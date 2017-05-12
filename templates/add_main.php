@@ -3,7 +3,7 @@
         <ul class="nav__list container">
             <?php foreach ($categories as $key => $value): ?>
             <li class="nav__item">
-                <a href="all-lots.html"><?=$value;?></a>
+                <a href="all-lots.html"><?=$value['name'];?></a>
             </li>
             <?php endforeach; ?>
         </ul>
@@ -11,58 +11,58 @@
     <form class="form form--add-lot container <?=$class['form'];?>" action="add.php" method="post" enctype="multipart/form-data"> <!-- form--invalid -->
         <h2>Добавление лота</h2>
         <div class="form__container-two">
-            <div class="form__item <?=$class['lot-name'];?>"> <!-- form__item--invalid -->
+            <div class="form__item <?=$class['name'];?>"> <!-- form__item--invalid -->
                 <label for="lot-name">Наименование</label>
-                <input id="lot-name" type="text" name="lot-name" value="<?=$data['lot-name'];?>" placeholder="Введите наименование лота"> <!-- required -->
-                <span class="form__error"><?=$message['lot-name'];?></span>
+                <input id="lot-name" type="text" name="name" value="<?=$data['name'];?>" placeholder="Введите наименование лота"> <!-- required -->
+                <span class="form__error"><?=$message['name'];?></span>
             </div>
             <div class="form__item <?=$class['category'];?>">
                 <label for="category">Категория</label>
                 <select id="category" name="category"> <!-- required -->
                     <option value="0">Выберите категорию</option>
                     <?php foreach ($categories as $key => $value): ?>
-                        <option value="<?=$key+1;?>"<?=($data['category']==$key+1)?' selected':'';?>><?=$value;?></option>
+                        <option value="<?=$value['id'];?>"<?=($data['category']==$value['id'])?' selected':'';?>><?=$value['name'];?></option>
                     <?php endforeach; ?>
                 </select>
                 <span class="form__error"><?=$message['category'];?></span>
             </div>
         </div>
-        <div class="form__item form__item--wide <?=$class['message'];?>">
+        <div class="form__item form__item--wide <?=$class['description'];?>">
             <label for="message">Описание</label>
-            <textarea id="message" name="message" placeholder="Напишите описание лота"><?=$data['message'];?></textarea> <!-- required -->
-            <span class="form__error"><?=$message['message'];?></span>
+            <textarea id="message" name="description" placeholder="Напишите описание лота"><?=$data['description'];?></textarea> <!-- required -->
+            <span class="form__error"><?=$message['description'];?></span>
         </div>
-        <div class="form__item form__item--file <?=$class['lot-image'];?>"> <!-- form__item--uploaded -->
+        <div class="form__item form__item--file <?=$class['image'];?>"> <!-- form__item--uploaded -->
             <label>Изображение</label>
             <div class="preview">
                 <button class="preview__remove" type="button">x</button>
                 <div class="preview__img">
-                    <img src="../<?=$data['lot-image'];?>" width="113" height="113" alt="Изображение лота">
+                    <img src="../<?=$data['image'];?>" width="113" height="113" alt="Изображение лота">
                 </div>
             </div>
             <div class="form__input-file">
-                <input class="visually-hidden" type="file" id="photo2" name="lot-image" value="">
+                <input class="visually-hidden" type="file" id="photo2" name="image" value="">
                 <label for="photo2">
                     <span>+ Добавить</span>
                 </label>
             </div>
-            <span class="form__error"><?=$message['lot-image'];?></span>
+            <span class="form__error"><?=$message['image'];?></span>
         </div>
         <div class="form__container-three">
-            <div class="form__item form__item--small <?=$class['lot-rate'];?>">
+            <div class="form__item form__item--small <?=$class['price'];?>">
                 <label for="lot-rate">Начальная цена</label>
-                <input id="lot-rate" type="text" name="lot-rate" value="<?=$data['lot-rate'];?>" placeholder="0"> <!-- number required -->
-                <span class="form__error"><?=$message['lot-rate'];?></span>
+                <input id="lot-rate" type="text" name="price" value="<?=$data['price'];?>" placeholder="0"> <!-- number required -->
+                <span class="form__error"><?=$message['price'];?></span>
             </div>
-            <div class="form__item form__item--small <?=$class['lot-step'];?>">
+            <div class="form__item form__item--small <?=$class['step'];?>">
                 <label for="lot-step">Шаг ставки</label>
-                <input id="lot-step" type="text" name="lot-step" value="<?=$data['lot-step'];?>" placeholder="0"> <!-- number required -->
-                <span class="form__error"><?=$message['lot-step'];?></span>
+                <input id="lot-step" type="text" name="step" value="<?=$data['step'];?>" placeholder="0"> <!-- number required -->
+                <span class="form__error"><?=$message['step'];?></span>
             </div>
-            <div class="form__item <?=$class['lot-date'];?>">
+            <div class="form__item <?=$class['date_expire'];?>">
                 <label for="lot-date">Дата завершения</label>
-                <input class="form__input-date" id="lot-date" type="text" name="lot-date" value="<?=$data['lot-date'];?>" placeholder="20.05.2017"> <!-- required -->
-                <span class="form__error"><?=$message['lot-date'];?></span>
+                <input class="form__input-date" id="lot-date" type="text" name="date_expire" value="<?=$data['date_expire'];?>" placeholder="20.05.2017"> <!-- required -->
+                <span class="form__error"><?=$message['date_expire'];?></span>
             </div>
         </div>
         <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>

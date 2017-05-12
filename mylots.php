@@ -4,14 +4,16 @@ session_start();
 // подключение файла с функциями
 require_once 'functions.php';
 
-// подключение файла с данными
-require_once 'data.php';
-
 // проверка аутентификации
 requireAuthentication();
 
-// получение массива ставок
-$mybets = decodeCookie('mybets');
+$link = dbConnect($db);
+
+if ($link) {
+    $categories = getCategories($link);
+    $mybets = getBetsByUser($link, $_SESSION['user']['id']);
+    mysqli_close($link);
+}
 
 ?>
 <!DOCTYPE html>
@@ -24,9 +26,9 @@ $mybets = decodeCookie('mybets');
 </head>
 <body>
 
-<?=includeTemplate('templates/header.php', []); ?>
+<?=includeTemplate('templates/header.php', ['avatar' => getAvatar()]); ?>
 
-<?=includeTemplate('templates/mylots_main.php', ['categories' => $categories, 'lots' => $lots, 'mybets' => $mybets, 'lot_time_remaining' => $lot_time_remaining]); ?>
+<?=includeTemplate('templates/mylots_main.php', ['categories' => $categories, 'mybets' => $mybets, 'lot_time_remaining' => $lot_time_remaining]); ?>
 
 <?=includeTemplate('templates/footer.php', ['categories' => $categories]); ?>
 

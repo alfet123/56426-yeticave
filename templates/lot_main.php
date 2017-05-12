@@ -3,7 +3,7 @@
         <ul class="nav__list container">
             <?php foreach ($categories as $key => $value): ?>
             <li class="nav__item">
-                <a href="all-lots.html"><?=$value;?></a>
+                <a href="all-lots.html"><?=$value['name'];?></a>
             </li>
             <?php endforeach; ?>
         </ul>
@@ -27,7 +27,7 @@
                     <div class="lot-item__cost-state">
                         <div class="lot-item__rate">
                             <span class="lot-item__amount">Текущая цена</span>
-                            <span class="lot-item__cost"><?=$lot['price'];?></span>
+                            <span class="lot-item__cost"><?=$lot['curr-bet'];?></span>
                         </div>
                         <div class="lot-item__min-cost">
                             Мин. ставка <span><?=$lot['min-bet'];?> р</span>
@@ -44,13 +44,13 @@
                 </div>
             <?php endif; ?>
                 <div class="history">
-                    <h3>История ставок (<span>4</span>)</h3>
+                    <h3>История ставок (<span><?=count($bets);?></span>)</h3>
                     <table class="history__list">
                         <?php foreach ($bets as $key => $value): ?>
                         <tr class="history__item">
                             <td class="history__name"><?=$value['name'];?></td>
                             <td class="history__price"><?=$value['price'];?> р</td>
-                            <td class="history__time"><?=timeInRelativeFormat($value['ts']);?></td>
+                            <td class="history__time"><?=timeInRelativeFormat(strtotime($value['date']));?></td>
                         </tr>
                         <?php endforeach; ?>
                     </table>

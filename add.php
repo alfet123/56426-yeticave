@@ -4,20 +4,24 @@ session_start();
 // подключение файла с функциями
 require_once 'functions.php';
 
-// подключение файла с данными
-require_once 'data.php';
-
 // проверка аутентификации
 requireAuthentication();
 
+$link = dbConnect($db);
+
+if ($link) {
+    $categories = getCategories($link);
+    mysqli_close($link);
+}
+
 // массив для данных из формы
 $formData = [
-    'lot-name' => '',
+    'name' => '',
     'category' => '',
-    'message' => '',
-    'lot-rate' => '',
-    'lot-step' => '',
-    'lot-date' => ''
+    'description' => '',
+    'price' => '',
+    'step' => '',
+    'date_expire' => ''
 ];
 
 // массив для дополнительных классов
@@ -43,24 +47,24 @@ if (isset($_POST['send'])) {
     }
 
     //проверка числовых значений
-    if (!empty($formData['lot-rate']) && !is_numeric($formData['lot-rate'])) {
-        setFormError($formClasses, $formMessages, 'lot-rate', 'Введите числовое значение');
+    if (!empty($formData['price']) && !is_numeric($formData['price'])) {
+        setFormError($formClasses, $formMessages, 'price', 'Введите числовое значение');
     }
-    if (!empty($formData['lot-step']) && !is_numeric($formData['lot-step'])) {
-        setFormError($formClasses, $formMessages, 'lot-step', 'Введите числовое значение');
+    if (!empty($formData['step']) && !is_numeric($formData['step'])) {
+        setFormError($formClasses, $formMessages, 'step', 'Введите числовое значение');
     }
 
     // cохранение загруженного файла
-    if (isset($_FILES['lot-image'])) {
-        $file = $_FILES['lot-image'];
+    if (isset($_FILES['image'])) {
+        $file = $_FILES['image'];
         $filename = $file['name'];
         $source = $file['tmp_name'];
         $target = "img/$filename";
         if (move_uploaded_file($source, $target)) {
-            $formData['lot-image'] = $target;
-            $formClasses['lot-image'] = 'form__item--uploaded';
+            $formData['image'] = $target;
+            $formClasses['image'] = 'form__item--uploaded';
         } else {
-            setFormError($formClasses, $formMessages, 'lot-image', 'Выберите файл для загрузки');
+            setFormError($formClasses, $formMessages, 'image', 'Выберите файл для загрузки');
         }
     }
 
@@ -68,12 +72,27 @@ if (isset($_POST['send'])) {
 
 // проверка, что форма заполнена полностью
 if (isset($_POST['send']) && empty($formClasses['form'])) {
-    $template = 'templates/main.php';
-    array_unshift($lots, ['name' => $formData['lot-name'], 'category' => $categories[$formData['category']-1], 'price' => $formData['lot-rate'], 'image' => $formData['lot-image'], 'description' => $formData['message']]);
-    $data = ['categories' => $categories, 'lots' => $lots, 'lot_time_remaining' => $lot_time_remaining];
-} else {
-    $template = 'templates/add_main.php';
-    $data = ['categories' => $categories, 'data' => $formData, 'class' => $formClasses, 'message' => $formMessages];
+    // Добавление лота
+    $link = dbConnect($db);
+    if ($link) {
+        $now = getdate();
+
+        $lotData   = [date("Y-m-d H:i:s")];
+        $lotData[] = $formData['name'];
+        $lotData[] = $formData['description'];
+        $lotData[] = $target;
+        $lotData[] = $formData['price'];
+        $lotData[] = date("Y-m-d H:i:s", strtotime($formData['date_expire']." ".$now['hours'].":".$now['minutes'].":".$now['seconds']));
+        $lotData[] = $formData['step'];
+        $lotData[] = $_SESSION['user']['id'];
+        $lotData[] = $formData['category'];
+
+        $newId = newLot($link, $lotData);
+
+        mysqli_close($link);
+        header("Location: lot.php?id=$newId");
+        exit;
+    }
 }
 
 ?>
@@ -88,9 +107,9 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
 </head>
 <body>
 
-<?=includeTemplate('templates/header.php', []); ?>
+<?=includeTemplate('templates/header.php', ['avatar' => getAvatar()]); ?>
 
-<?=includeTemplate($template, $data); ?>
+<?=includeTemplate('templates/add_main.php', ['categories' => $categories, 'data' => $formData, 'class' => $formClasses, 'message' => $formMessages]); ?>
 
 <?=includeTemplate('templates/footer.php', ['categories' => $categories]); ?>
 
