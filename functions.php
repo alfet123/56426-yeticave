@@ -175,7 +175,7 @@ function updateData($link, $table, $data, $conditions)
 // функция для подключения к базе данных
 function dbConnect($db)
 {
-    $link = mysqli_connect($db['host'], $db['name'], $db['user'], $db['pass']);
+    $link = mysqli_connect($db['host'], $db['user'], $db['pass'], $db['name']);
 
     if ($link) {
         mysqli_query($link, "SET NAMES 'utf8'");
