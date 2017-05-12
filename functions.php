@@ -228,7 +228,7 @@ function getLots($link, array $ids = [])
     $sql .= 'from lot ';
     $sql .= 'join category on lot.category = category.id ';
     if (!empty($ids)) {
-        $sql .= 'where lot.id in (?) ';
+        $sql .= 'where lot.id in ('.implode(',', array_fill(0, count($ids), '?')).') ';
     }
     $sql .= 'order by date_create desc';
 
