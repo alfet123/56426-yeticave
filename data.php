@@ -18,9 +18,9 @@ $lot_time_remaining = gmdate("H:i", $tomorrow - $now);
 // значения для подключения к базе данных
 $db = [
     'host' => 'localhost',
-    'name' => 'yeticave',
     'user' => 'yeticave',
-    'pass' => 'yeticave'
+    'pass' => 'yeticave',
+    'name' => 'yeticave'
 ];
 
 ?>
