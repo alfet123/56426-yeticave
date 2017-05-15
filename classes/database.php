@@ -6,7 +6,7 @@
 class DataBase {
 
     /**
-     * @var object $link Установленное подключение
+     * @var mysqli $link Установленное подключение
      */
     private $link;
 
@@ -17,11 +17,11 @@ class DataBase {
 
     /**
      * Создает подключение к базе данных
-     * @param array $db Параметры для установки соединения
+     * @param array $config Параметры для установки соединения
      */
-    public function connect($db)
+    public function connect($config)
     {
-        $this->$link = mysqli_connect($db['host'], $db['user'], $db['pass'], $db['name']);
+        $this->$link = mysqli_connect($config['host'], $config['user'], $config['pass'], $config['name']);
 
         if ($this->$link) {
             mysqli_query($this->$link, "SET NAMES 'utf8'");
@@ -52,7 +52,7 @@ class DataBase {
      * @param array $data Значения параметров для условий запроса
      * @return array Массив с данными
      */
-    public function getData($sql, $data = [])
+    public static function getData($sql, $data = [])
     {
         $result = [];
 
@@ -83,7 +83,7 @@ class DataBase {
      * @param array $data Значения для добавления
      * @return mixed Идентификатор новой записи
      */
-    public function insertData($sql, $data)
+    public static function insertData($sql, $data)
     {
         $result = false;
 
@@ -109,7 +109,7 @@ class DataBase {
      * @param array $conditions Значения параметров для условий запроса
      * @return int Количество измененных записей
      */
-    public function updateData($table, $data, $conditions)
+    public static function updateData($table, $data, $conditions)
     {
         $result = false;
 
@@ -145,7 +145,7 @@ class DataBase {
      * @param array &$values Массив для значений параметров фрагмента запроса
      * @return string Фрагмента запроса в виде строки с плейсхолдерами
      */
-    private function sqlFragment($data, $separator, &$values)
+    public function sqlFragment($data, $separator, &$values)
     {
         $pairs = [];
         foreach ($data as $key => $value) {
@@ -192,6 +192,23 @@ class DataBase {
             $func = 'mysqli_stmt_bind_param';
             $func(...$values);
         }
+    }
+
+    /**
+     * Конструктор
+     * @param array $config Параметры для установки соединения
+     */
+    private function __construct($config)
+    {
+        $this->connect($config);
+    }
+
+    /**
+     * Деструктор
+     */
+    private function __destruct()
+    {
+        $this->close();
     }
 
 }

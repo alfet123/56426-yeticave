@@ -7,11 +7,23 @@ class User {
 
     /**
      * Выполняет аутентификацию пользователя
-     * @param array $user Данные пользователя
+     * @param mysqli $link Идентификатор подключения к базе данных
+     * @param string $email E-mail
+     * @param string $password Пароль
+     * @return array Состояние и данные аутентификации
      */
-    public function login($user)
+    public function login($link, $email, $password)
     {
-        $_SESSION['user'] = $user;
+        if ($user = $this->getUserByEmail($link, $email)) {
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['user'] = $user;
+                return ['auth' => true, 'data' => $user];
+            } else {
+                return ['auth' => false, 'data' => 'password'];
+            }
+        } else {
+            return ['auth' => false, 'data' => 'email'];
+        }
     }
 
     /**
@@ -60,6 +72,61 @@ class User {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Добавляет нового пользователя
+     * @param mysqli $link Идентификатор подключения к базе данных
+     * @param array $userData Данные нового пользователя
+     * @return int Идентификатор нового пользователя в базе данных
+     */
+    public function newUser($link, array $userData)
+    {
+        $values = [];
+
+        $sql  = 'insert into user set ';
+
+        $sql .= DataBase::sqlFragment($userData, ", ", $values);
+
+        return DataBase::insertData($link, $sql, $values);
+    }
+
+    /**
+     * Получает пользователя по Id из базы данных
+     * @param mysqli $link Идентификатор подключения к базе данных
+     * @param int $userId Идентификатор пользователя
+     * @return array Данные пользователя
+     */
+    public function getUserById($link, $userId)
+    {
+        $sql = 'select * from `user` where `id` = ?';
+
+        $data = DataBase::getData($link, $sql, [$userId]);
+
+        if (!empty($data)) {
+            return $data[0];
+        }
+
+        return null;
+    }
+
+    /**
+     * Получает пользователя по e-mail из базы данных
+     * @param mysqli $link Идентификатор подключения к базе данных
+     * @param string $email E-mail пользователя
+     * @return array Данные пользователя
+     */
+    private function getUserByEmail($link, $email)
+    {
+        $sql = 'select * from `user` where `email` = ? limit 1';
+
+        $data = DataBase::getData($link, $sql, [$email]);
+
+        if (!empty($data)) {
+            return $data[0];
+        }
+
+        return null;
     }
 
 }
