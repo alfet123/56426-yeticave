@@ -16,17 +16,20 @@ class DataBase {
     private $stmt;
 
     /**
-     * Создает подключение к базе данных
+     * Конструктор
      * @param array $config Параметры для установки соединения
      */
-    public function connect($config)
+    public function __construct($config)
     {
-        $this->$link = mysqli_connect($config['host'], $config['user'], $config['pass'], $config['name']);
+        $this->connect($config);
+    }
 
-        if ($this->$link) {
-            mysqli_query($this->$link, "SET NAMES 'utf8'");
-            mysqli_query($this->$link, "SET CHARACTER SET 'utf8'");
-        }
+    /**
+     * Деструктор
+     */
+    public function __destruct()
+    {
+        $this->close();
     }
 
     /**
@@ -156,6 +159,20 @@ class DataBase {
     }
 
     /**
+     * Создает подключение к базе данных
+     * @param array $config Параметры для установки соединения
+     */
+    private function connect($config)
+    {
+        $this->$link = mysqli_connect($config['host'], $config['user'], $config['pass'], $config['name']);
+
+        if ($this->$link) {
+            mysqli_query($this->$link, "SET NAMES 'utf8'");
+            mysqli_query($this->$link, "SET CHARACTER SET 'utf8'");
+        }
+    }
+
+    /**
      * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
      * @param string $sql SQL запрос с плейсхолдерами вместо значений
      * @param array $data Данные для вставки на место плейсхолдеров
@@ -192,23 +209,6 @@ class DataBase {
             $func = 'mysqli_stmt_bind_param';
             $func(...$values);
         }
-    }
-
-    /**
-     * Конструктор
-     * @param array $config Параметры для установки соединения
-     */
-    private function __construct($config)
-    {
-        $this->connect($config);
-    }
-
-    /**
-     * Деструктор
-     */
-    private function __destruct()
-    {
-        $this->close();
     }
 
 }

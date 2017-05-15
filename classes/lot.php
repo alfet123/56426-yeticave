@@ -11,7 +11,7 @@ class Lot {
      * @param array $ids Список идентификаторов лотов
      * @return array Список лотов
      */
-    public function getLots($link, array $ids = [])
+    public static function getLots($link, array $ids = [])
     {
         $sql  = 'select lot.*, category.name as category ';
         $sql .= 'from lot ';
@@ -30,7 +30,7 @@ class Lot {
      * @param int $lotId Идентификатор лота
      * @return array Данные лота
      */
-    public function getLotById($link, $lotId)
+    public static function getLotById($link, $lotId)
     {
         $data = $this->getLots($link, [$lotId]);
 
@@ -47,7 +47,7 @@ class Lot {
      * @param array $lotData Данные нового лота
      * @return int Идентификатор нового лота
      */
-    public function newLot($link, array $lotData)
+    public static function newLot($link, array $lotData)
     {
         $sql  = 'insert into lot set ';
         $sql .= 'date_create = ?, ';

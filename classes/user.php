@@ -12,9 +12,9 @@ class User {
      * @param string $password Пароль
      * @return array Состояние и данные аутентификации
      */
-    public function login($link, $email, $password)
+    public static function login($link, $email, $password)
     {
-        if ($user = $this->getUserByEmail($link, $email)) {
+        if ($user = self::getUserByEmail($link, $email)) {
             if (password_verify($password, $user['password'])) {
                 $_SESSION['user'] = $user;
                 return ['auth' => true, 'data' => $user];
@@ -80,7 +80,7 @@ class User {
      * @param array $userData Данные нового пользователя
      * @return int Идентификатор нового пользователя в базе данных
      */
-    public function newUser($link, array $userData)
+    public static function newUser($link, array $userData)
     {
         $values = [];
 
@@ -97,7 +97,7 @@ class User {
      * @param int $userId Идентификатор пользователя
      * @return array Данные пользователя
      */
-    public function getUserById($link, $userId)
+    public static function getUserById($link, $userId)
     {
         $sql = 'select * from `user` where `id` = ?';
 
@@ -116,7 +116,7 @@ class User {
      * @param string $email E-mail пользователя
      * @return array Данные пользователя
      */
-    private function getUserByEmail($link, $email)
+    private static function getUserByEmail($link, $email)
     {
         $sql = 'select * from `user` where `email` = ? limit 1';
 

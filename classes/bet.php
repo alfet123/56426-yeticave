@@ -11,7 +11,7 @@ class Bet {
      * @param int $lotId Идентификатор лота
      * @return array Список ставок
      */
-    public function getBetsByLot($link, $lotId)
+    public static function getBetsByLot($link, $lotId)
     {
         $sql  = 'select bet.date, bet.price, user.id, user.name ';
         $sql .= 'from bet ';
@@ -28,7 +28,7 @@ class Bet {
      * @param int $userId Идентификатор пользователя
      * @return array Список ставок
      */
-    public function getBetsByUser($link, $userId)
+    public static function getBetsByUser($link, $userId)
     {
         $sql  = 'select lot.id, lot.image, lot.name as name, category.name as category, max(bet.price) as price, bet.date ';
         $sql .= 'from lot ';
@@ -47,7 +47,7 @@ class Bet {
      * @param array $betData Данные новой ставки
      * @return int Идентификатор новой ставки
      */
-    public function newBet($link, array $betData)
+    public static function newBet($link, array $betData)
     {
         $sql  = 'insert into bet set ';
         $sql .= 'date = ?, ';
