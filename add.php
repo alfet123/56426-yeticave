@@ -1,18 +1,20 @@
 <?php
 session_start();
 
-// подключение файла с функциями
 require_once 'functions.php';
+require_once 'classes/database.php';
+require_once 'classes/category.php';
+require_once 'classes/lot.php';
+require_once 'classes/user.php';
 
-// проверка аутентификации
-requireAuthentication();
-
-$link = dbConnect($db);
-
-if ($link) {
-    $categories = getCategories($link);
-    mysqli_close($link);
+if (!User::isAuth()) {
+    header("Location: login.php");
+    exit;
 }
+
+DataBase::connect($config);
+
+$categories = Category::getAll();
 
 // массив для данных из формы
 $formData = [
@@ -73,26 +75,22 @@ if (isset($_POST['send'])) {
 // проверка, что форма заполнена полностью
 if (isset($_POST['send']) && empty($formClasses['form'])) {
     // Добавление лота
-    $link = dbConnect($db);
-    if ($link) {
-        $now = getdate();
+    $now = getdate();
 
-        $lotData   = [date("Y-m-d H:i:s")];
-        $lotData[] = $formData['name'];
-        $lotData[] = $formData['description'];
-        $lotData[] = $target;
-        $lotData[] = $formData['price'];
-        $lotData[] = date("Y-m-d H:i:s", strtotime($formData['date_expire']." ".$now['hours'].":".$now['minutes'].":".$now['seconds']));
-        $lotData[] = $formData['step'];
-        $lotData[] = $_SESSION['user']['id'];
-        $lotData[] = $formData['category'];
+    $lotData   = [date("Y-m-d H:i:s")];
+    $lotData[] = $formData['name'];
+    $lotData[] = $formData['description'];
+    $lotData[] = $target;
+    $lotData[] = $formData['price'];
+    $lotData[] = date("Y-m-d H:i:s", strtotime($formData['date_expire']." ".$now['hours'].":".$now['minutes'].":".$now['seconds']));
+    $lotData[] = $formData['step'];
+    $lotData[] = $_SESSION['user']['id'];
+    $lotData[] = $formData['category'];
 
-        $newId = newLot($link, $lotData);
+    $newId = Lot::newLot($lotData);
 
-        mysqli_close($link);
-        header("Location: lot.php?id=$newId");
-        exit;
-    }
+    header("Location: lot.php?id=$newId");
+    exit;
 }
 
 ?>
@@ -107,7 +105,7 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
 </head>
 <body>
 
-<?=includeTemplate('templates/header.php', ['avatar' => getAvatar()]); ?>
+<?=includeTemplate('templates/header.php', ['avatar' => User::getAvatar()]); ?>
 
 <?=includeTemplate('templates/add_main.php', ['categories' => $categories, 'data' => $formData, 'class' => $formClasses, 'message' => $formMessages]); ?>
 

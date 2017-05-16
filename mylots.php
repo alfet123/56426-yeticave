@@ -1,19 +1,22 @@
 <?php
 session_start();
 
-// подключение файла с функциями
 require_once 'functions.php';
+require_once 'classes/database.php';
+require_once 'classes/category.php';
+require_once 'classes/bet.php';
+require_once 'classes/user.php';
 
-// проверка аутентификации
-requireAuthentication();
-
-$link = dbConnect($db);
-
-if ($link) {
-    $categories = getCategories($link);
-    $mybets = getBetsByUser($link, $_SESSION['user']['id']);
-    mysqli_close($link);
+if (!User::isAuth()) {
+    header("Location: login.php");
+    exit;
 }
+
+DataBase::connect($config);
+
+$categories = Category::getAll();
+
+$mybets = Bet::getBetsByUser($_SESSION['user']['id']);
 
 ?>
 <!DOCTYPE html>
@@ -26,7 +29,7 @@ if ($link) {
 </head>
 <body>
 
-<?=includeTemplate('templates/header.php', ['avatar' => getAvatar()]); ?>
+<?=includeTemplate('templates/header.php', ['avatar' => User::getAvatar()]); ?>
 
 <?=includeTemplate('templates/mylots_main.php', ['categories' => $categories, 'mybets' => $mybets, 'lot_time_remaining' => $lot_time_remaining]); ?>
 

@@ -8,12 +8,12 @@ class DataBase {
     /**
      * @var mysqli $link Установленное подключение
      */
-    private $link;
+    private static $link;
 
     /**
      * @var mysqli_stmt $stmt Подготовленное выражение
      */
-    private $stmt;
+    private static $stmt;
 
     /**
      * Конструктор
@@ -21,7 +21,7 @@ class DataBase {
      */
     public function __construct($config)
     {
-        $this->connect($config);
+        self::connect($config);
     }
 
     /**
@@ -29,24 +29,24 @@ class DataBase {
      */
     public function __destruct()
     {
-        $this->close();
+        self::close();
     }
 
     /**
      * Закрывает подключение к базе данных
      */
-    public function close()
+    public static function close()
     {
-        mysqli_close($this->$link);
+        mysqli_close(self::$link);
     }
 
     /**
      * Возвращает информацию о последней ошибке
      * @return string Описание ошибки
      */
-    public function lastError()
+    public static function lastError()
     {
-        return mysqli_error($this->$link);
+        return mysqli_error(self::$link);
     }
 
     /**
@@ -59,13 +59,13 @@ class DataBase {
     {
         $result = [];
 
-        prepareStmt($sql, $data);
+        self::prepareStmt($sql, $data);
 
-        if ($this->$stmt) {
+        if (self::$stmt) {
 
-            if (mysqli_stmt_execute($this->$stmt)) {
+            if (mysqli_stmt_execute(self::$stmt)) {
 
-                $res = mysqli_stmt_get_result($this->$stmt);
+                $res = mysqli_stmt_get_result(self::$stmt);
 
                 while ($row = mysqli_fetch_array($res, MYSQLI_ASSOC)) {
                     $result[] = $row;
@@ -73,7 +73,7 @@ class DataBase {
 
             }
 
-            mysqli_stmt_close($this->$stmt);
+            mysqli_stmt_close(self::$stmt);
 
         }
 
@@ -90,15 +90,15 @@ class DataBase {
     {
         $result = false;
 
-        prepareStmt($sql, $data);
+        self::prepareStmt($sql, $data);
 
-        if ($this->$stmt) {
+        if (self::$stmt) {
 
-            if (mysqli_stmt_execute($this->$stmt)) {
-                $result = mysqli_stmt_insert_id($this->$stmt);
+            if (mysqli_stmt_execute(self::$stmt)) {
+                $result = mysqli_stmt_insert_id(self::$stmt);
             }
 
-            mysqli_stmt_close($this->$stmt);
+            mysqli_stmt_close(self::$stmt);
 
         }
 
@@ -120,21 +120,21 @@ class DataBase {
 
         $sql = "update `".$table."` set ";
 
-        $sql .= sqlFragment($data, ", ", $values);
+        $sql .= self::sqlFragment($data, ", ", $values);
 
         if (!empty($conditions)) {
-            $sql .= " where ".sqlFragment($conditions, " and ", $values);
+            $sql .= " where ".self::sqlFragment($conditions, " and ", $values);
         }
 
-        prepareStmt($sql, $values);
+        self::prepareStmt($sql, $values);
 
-        if ($this->$stmt) {
+        if (self::$stmt) {
 
-            if (mysqli_stmt_execute($this->$stmt)) {
-                $result = mysqli_stmt_affected_rows($this->$stmt);
+            if (mysqli_stmt_execute(self::$stmt)) {
+                $result = mysqli_stmt_affected_rows(self::$stmt);
             }
 
-            mysqli_stmt_close($this->$stmt);
+            mysqli_stmt_close(self::$stmt);
 
         }
 
@@ -148,7 +148,7 @@ class DataBase {
      * @param array &$values Массив для значений параметров фрагмента запроса
      * @return string Фрагмента запроса в виде строки с плейсхолдерами
      */
-    public function sqlFragment($data, $separator, &$values)
+    public static function sqlFragment($data, $separator, &$values)
     {
         $pairs = [];
         foreach ($data as $key => $value) {
@@ -162,13 +162,13 @@ class DataBase {
      * Создает подключение к базе данных
      * @param array $config Параметры для установки соединения
      */
-    private function connect($config)
+    public static function connect($config)
     {
-        $this->$link = mysqli_connect($config['host'], $config['user'], $config['pass'], $config['name']);
+        self::$link = mysqli_connect($config['host'], $config['user'], $config['pass'], $config['name']);
 
-        if ($this->$link) {
-            mysqli_query($this->$link, "SET NAMES 'utf8'");
-            mysqli_query($this->$link, "SET CHARACTER SET 'utf8'");
+        if (self::$link) {
+            mysqli_query(self::$link, "SET NAMES 'utf8'");
+            mysqli_query(self::$link, "SET CHARACTER SET 'utf8'");
         }
     }
 
@@ -177,9 +177,9 @@ class DataBase {
      * @param string $sql SQL запрос с плейсхолдерами вместо значений
      * @param array $data Данные для вставки на место плейсхолдеров
      */
-    private function prepareStmt($sql, $data = [])
+    private static function prepareStmt($sql, $data = [])
     {
-        $this->$stmt = mysqli_prepare($this->$link, $sql);
+        self::$stmt = mysqli_prepare(self::$link, $sql);
 
         if ($data) {
             $types = '';
@@ -204,7 +204,7 @@ class DataBase {
                 }
             }
 
-            $values = array_merge([$this->$stmt, $types], $stmt_data);
+            $values = array_merge([self::$stmt, $types], $stmt_data);
 
             $func = 'mysqli_stmt_bind_param';
             $func(...$values);

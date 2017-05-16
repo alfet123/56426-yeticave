@@ -1,15 +1,14 @@
 <?php
 session_start();
 
-// подключение файла с функциями
 require_once 'functions.php';
+require_once 'classes/database.php';
+require_once 'classes/category.php';
+require_once 'classes/user.php';
 
-$link = dbConnect($db);
+DataBase::connect($config);
 
-if ($link) {
-    $categories = getCategories($link);
-    mysqli_close($link);
-}
+$categories = Category::getAll();
 
 // массив для данных из формы
 $formData = [
@@ -51,28 +50,21 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $link = dbConnect($db);
+    // аутентификация
+    $user = User::login($email, $password);
 
-    if ($link) {
-
-        // аутентификация
-        if ($user = getUserByEmail($link, $email)) {
-            if (password_verify($password, $user['password'])) {
-                $_SESSION['user'] = $user;
-                mysqli_close($link);
-                header("Location: /");
-                exit;
-            } else {
-                $formData['password'] = '';
-                setFormError($formClasses, $formMessages, 'password', 'Вы ввели неверный пароль');
-            }
-        } else {
-            $formData['email'] = '';
-            setFormError($formClasses, $formMessages, 'email', 'Вы ввели неверный e-mail');
-        }
-
-        mysqli_close($link);
+    if ($user['auth']) {
+        header("Location: /");
+        exit;
     }
+
+    $errorAuthMessages = [
+        'email' => 'Вы ввели неверный e-mail',
+        'password' => 'Вы ввели неверный пароль'
+    ];
+
+    $formData[$user['field']] = '';
+    setFormError($formClasses, $formMessages, $user['field'], $errorAuthMessages[$user['field']]);
 
 }
 
@@ -88,7 +80,7 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
 </head>
 <body>
 
-<?=includeTemplate('templates/header.php', ['avatar' => getAvatar()]); ?>
+<?=includeTemplate('templates/header.php', ['avatar' => User::getAvatar()]); ?>
 
 <?=includeTemplate('templates/login_main.php', ['categories' => $categories, 'data' => $formData, 'class' => $formClasses, 'message' => $formMessages]); ?>
 

@@ -1,6 +1,9 @@
 <?php
 session_start();
-session_unset();
-session_destroy();
+
+require_once 'classes/user.php';
+
+User::logout();
+
 header("Location: /");
 ?>
