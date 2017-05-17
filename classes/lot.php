@@ -21,7 +21,7 @@ class Lot {
         }
         $sql .= 'order by date_create desc';
 
-        return DataBase::getData($sql, $ids);
+        return DataBase::instance()->getData($sql, $ids);
     }
 
     /**
@@ -60,7 +60,7 @@ class Lot {
         $sql .= 'owner = ?, ';
         $sql .= 'category = ?';
 
-        return DataBase::insertData($sql, $lotData);
+        return DataBase::instance()->insertData($sql, $lotData);
     }
 
 }

@@ -21,9 +21,8 @@ class User {
             } else {
                 return ['auth' => false, 'field' => 'password'];
             }
-        } else {
-            return ['auth' => false, 'field' => 'email'];
         }
+        return ['auth' => false, 'field' => 'email'];
     }
 
     /**
@@ -41,11 +40,7 @@ class User {
      */
     public static function isAuth()
     {
-        if (isset($_SESSION['user'])) {
-            return true;
-        } else {
-            return false;
-        }
+        return isset($_SESSION['user']);
     }
 
     /**
@@ -56,9 +51,8 @@ class User {
     {
         if (isset($_SESSION['user']) && !empty($_SESSION['user']['avatar'])) {
             return $_SESSION['user']['avatar'];
-        } else {
-            return 'img/user.jpg';
         }
+        return 'img/user.jpg';
     }
 
     /**
@@ -69,9 +63,8 @@ class User {
     {
         if (isset($_SESSION['user'])) {
             return $_SESSION['user'];
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -88,7 +81,7 @@ class User {
 
         $sql .= DataBase::sqlFragment($userData, ", ", $values);
 
-        return DataBase::insertData($sql, $values);
+        return DataBase::instance()->insertData($sql, $values);
     }
 
     /**
@@ -101,7 +94,7 @@ class User {
     {
         $sql = 'select * from `user` where `id` = ?';
 
-        $data = DataBase::getData($sql, [$userId]);
+        $data = DataBase::instance()->getData($sql, [$userId]);
 
         if (!empty($data)) {
             return $data[0];
@@ -120,7 +113,7 @@ class User {
     {
         $sql = 'select * from `user` where `email` = ? limit 1';
 
-        $data = DataBase::getData($sql, [$email]);
+        $data = DataBase::instance()->getData($sql, [$email]);
 
         if (!empty($data)) {
             return $data[0];

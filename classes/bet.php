@@ -19,7 +19,7 @@ class Bet {
         $sql .= 'where bet.lot = ? ';
         $sql .= 'order by bet.price desc';
 
-        return DataBase::getData($sql, [$lotId]);
+        return DataBase::instance()->getData($sql, [$lotId]);
     }
 
     /**
@@ -38,7 +38,7 @@ class Bet {
         $sql .= 'group by lot.id, bet.id ';
         $sql .= 'order by bet.date desc';
 
-        return DataBase::getData($sql, [$userId]);
+        return DataBase::instance()->getData($sql, [$userId]);
     }
 
     /**
@@ -55,7 +55,7 @@ class Bet {
         $sql .= 'user = ?, ';
         $sql .= 'lot = ?';
 
-        return DataBase::insertData($sql, $betData);
+        return DataBase::instance()->insertData($sql, $betData);
     }
 
 }

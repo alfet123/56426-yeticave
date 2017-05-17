@@ -1,18 +1,12 @@
 <?php
 session_start();
 
-require_once 'functions.php';
-require_once 'classes/database.php';
-require_once 'classes/category.php';
-require_once 'classes/lot.php';
-require_once 'classes/user.php';
+require_once 'autoload.php';
 
 if (!User::isAuth()) {
     header("Location: login.php");
     exit;
 }
-
-DataBase::connect($config);
 
 $categories = Category::getAll();
 

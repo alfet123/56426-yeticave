@@ -14,7 +14,7 @@ class Category {
     {
         $sql = 'select `id`, `name` from `category` order by `id`';
 
-        return DataBase::getData($sql, []);
+        return DataBase::instance()->getData($sql, []);
     }
 
 }

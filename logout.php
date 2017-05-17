@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once 'classes/user.php';
+require_once 'autoload.php';
 
 User::logout();
 

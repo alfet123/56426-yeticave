@@ -1,12 +1,7 @@
 <?php
 session_start();
 
-require_once 'functions.php';
-require_once 'classes/database.php';
-require_once 'classes/category.php';
-require_once 'classes/user.php';
-
-DataBase::connect($config);
+require_once 'autoload.php';
 
 $categories = Category::getAll();
 

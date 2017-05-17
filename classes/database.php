@@ -1,27 +1,42 @@
 <?php
 
 /**
- * Class DataBase
+ * Class DataBase синглтон, т.е. его нельзя напрямую создать, а можно лишь обращаться через DataBase::instance()
  */
 class DataBase {
 
     /**
      * @var mysqli $link Установленное подключение
      */
-    private static $link;
+    private $link;
 
     /**
      * @var mysqli_stmt $stmt Подготовленное выражение
      */
-    private static $stmt;
+    private $stmt;
 
     /**
      * Конструктор
-     * @param array $config Параметры для установки соединения
      */
-    public function __construct($config)
+    private function __construct()
     {
-        self::connect($config);
+        // не очень гуд. Потом надо вынести в какой-нить dbconfig.php
+        $config = [
+            'host' => 'localhost',
+            'user' => 'yeticave',
+            'pass' => 'yeticave',
+            'name' => 'yeticave'
+        ];
+
+        $this->link = mysqli_connect($config['host'], $config['user'], $config['pass'], $config['name']);
+
+        if ($this->link) {
+            mysqli_query($this->link, "SET NAMES 'utf8'");
+            mysqli_query($this->link, "SET CHARACTER SET 'utf8'");
+        } else {
+            echo "Error connection to database";
+            exit;
+        }
     }
 
     /**
@@ -29,24 +44,28 @@ class DataBase {
      */
     public function __destruct()
     {
-        self::close();
+        mysqli_close($this->link);
     }
 
     /**
-     * Закрывает подключение к базе данных
+     * Получение экземпляра бд
      */
-    public static function close()
+    public static function instance()
     {
-        mysqli_close(self::$link);
+        static $instance;
+        if (!$instance) {
+            $instance = new DataBase();
+        }
+        return $instance;
     }
 
     /**
      * Возвращает информацию о последней ошибке
      * @return string Описание ошибки
      */
-    public static function lastError()
+    public function lastError()
     {
-        return mysqli_error(self::$link);
+        return mysqli_error($this->link);
     }
 
     /**
@@ -55,17 +74,17 @@ class DataBase {
      * @param array $data Значения параметров для условий запроса
      * @return array Массив с данными
      */
-    public static function getData($sql, $data = [])
+    public function getData($sql, $data = [])
     {
         $result = [];
 
-        self::prepareStmt($sql, $data);
+        $this->prepareStmt($sql, $data);
 
-        if (self::$stmt) {
+        if ($this->stmt) {
 
-            if (mysqli_stmt_execute(self::$stmt)) {
+            if (mysqli_stmt_execute($this->stmt)) {
 
-                $res = mysqli_stmt_get_result(self::$stmt);
+                $res = mysqli_stmt_get_result($this->stmt);
 
                 while ($row = mysqli_fetch_array($res, MYSQLI_ASSOC)) {
                     $result[] = $row;
@@ -73,7 +92,7 @@ class DataBase {
 
             }
 
-            mysqli_stmt_close(self::$stmt);
+            mysqli_stmt_close($this->stmt);
 
         }
 
@@ -86,19 +105,19 @@ class DataBase {
      * @param array $data Значения для добавления
      * @return mixed Идентификатор новой записи
      */
-    public static function insertData($sql, $data)
+    public function insertData($sql, $data)
     {
         $result = false;
 
-        self::prepareStmt($sql, $data);
+        $this->prepareStmt($sql, $data);
 
-        if (self::$stmt) {
+        if ($this->stmt) {
 
-            if (mysqli_stmt_execute(self::$stmt)) {
-                $result = mysqli_stmt_insert_id(self::$stmt);
+            if (mysqli_stmt_execute($this->stmt)) {
+                $result = mysqli_stmt_insert_id($this->stmt);
             }
 
-            mysqli_stmt_close(self::$stmt);
+            mysqli_stmt_close($this->stmt);
 
         }
 
@@ -112,7 +131,7 @@ class DataBase {
      * @param array $conditions Значения параметров для условий запроса
      * @return int Количество измененных записей
      */
-    public static function updateData($table, $data, $conditions)
+    public function updateData($table, $data, $conditions)
     {
         $result = false;
 
@@ -126,15 +145,15 @@ class DataBase {
             $sql .= " where ".self::sqlFragment($conditions, " and ", $values);
         }
 
-        self::prepareStmt($sql, $values);
+        $this->prepareStmt($sql, $values);
 
-        if (self::$stmt) {
+        if ($this->stmt) {
 
-            if (mysqli_stmt_execute(self::$stmt)) {
-                $result = mysqli_stmt_affected_rows(self::$stmt);
+            if (mysqli_stmt_execute($this->stmt)) {
+                $result = mysqli_stmt_affected_rows($this->stmt);
             }
 
-            mysqli_stmt_close(self::$stmt);
+            mysqli_stmt_close($this->stmt);
 
         }
 
@@ -159,27 +178,13 @@ class DataBase {
     }
 
     /**
-     * Создает подключение к базе данных
-     * @param array $config Параметры для установки соединения
-     */
-    public static function connect($config)
-    {
-        self::$link = mysqli_connect($config['host'], $config['user'], $config['pass'], $config['name']);
-
-        if (self::$link) {
-            mysqli_query(self::$link, "SET NAMES 'utf8'");
-            mysqli_query(self::$link, "SET CHARACTER SET 'utf8'");
-        }
-    }
-
-    /**
      * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
      * @param string $sql SQL запрос с плейсхолдерами вместо значений
      * @param array $data Данные для вставки на место плейсхолдеров
      */
-    private static function prepareStmt($sql, $data = [])
+    private function prepareStmt($sql, $data = [])
     {
-        self::$stmt = mysqli_prepare(self::$link, $sql);
+        $this->stmt = mysqli_prepare($this->link, $sql);
 
         if ($data) {
             $types = '';
@@ -204,7 +209,7 @@ class DataBase {
                 }
             }
 
-            $values = array_merge([self::$stmt, $types], $stmt_data);
+            $values = array_merge([$this->stmt, $types], $stmt_data);
 
             $func = 'mysqli_stmt_bind_param';
             $func(...$values);
