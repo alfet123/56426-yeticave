@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class DataBase
+ * Class DataBase синглтон, т.е. его нельзя напрямую создать, а можно лишь обращаться через DataBase::instance()
  */
 class DataBase {
 
@@ -17,11 +17,26 @@ class DataBase {
 
     /**
      * Конструктор
-     * @param array $config Параметры для установки соединения
      */
-    public function __construct($config)
+    private function __construct()
     {
-        $this->connect($config);
+        // не очень гуд. Потом надо вынести в какой-нить dbconfig.php
+        $config = [
+            'host' => 'localhost',
+            'user' => 'yeticave',
+            'pass' => 'yeticave',
+            'name' => 'yeticave'
+        ];
+
+        $this->link = mysqli_connect($config['host'], $config['user'], $config['pass'], $config['name']);
+
+        if ($this->link) {
+            mysqli_query($this->link, "SET NAMES 'utf8'");
+            mysqli_query($this->link, "SET CHARACTER SET 'utf8'");
+        } else {
+            echo "Error connection to database";
+            exit;
+        }
     }
 
     /**
@@ -29,15 +44,19 @@ class DataBase {
      */
     public function __destruct()
     {
-        $this->close();
+        mysqli_close($this->link);
     }
 
     /**
-     * Закрывает подключение к базе данных
+     * Получение экземпляра бд
      */
-    public function close()
+    public static function instance()
     {
-        mysqli_close($this->$link);
+        static $instance;
+        if (!$instance) {
+            $instance = new DataBase();
+        }
+        return $instance;
     }
 
     /**
@@ -46,7 +65,7 @@ class DataBase {
      */
     public function lastError()
     {
-        return mysqli_error($this->$link);
+        return mysqli_error($this->link);
     }
 
     /**
@@ -55,17 +74,17 @@ class DataBase {
      * @param array $data Значения параметров для условий запроса
      * @return array Массив с данными
      */
-    public static function getData($sql, $data = [])
+    public function getData($sql, $data = [])
     {
         $result = [];
 
-        prepareStmt($sql, $data);
+        $this->prepareStmt($sql, $data);
 
-        if ($this->$stmt) {
+        if ($this->stmt) {
 
-            if (mysqli_stmt_execute($this->$stmt)) {
+            if (mysqli_stmt_execute($this->stmt)) {
 
-                $res = mysqli_stmt_get_result($this->$stmt);
+                $res = mysqli_stmt_get_result($this->stmt);
 
                 while ($row = mysqli_fetch_array($res, MYSQLI_ASSOC)) {
                     $result[] = $row;
@@ -73,7 +92,7 @@ class DataBase {
 
             }
 
-            mysqli_stmt_close($this->$stmt);
+            mysqli_stmt_close($this->stmt);
 
         }
 
@@ -86,19 +105,19 @@ class DataBase {
      * @param array $data Значения для добавления
      * @return mixed Идентификатор новой записи
      */
-    public static function insertData($sql, $data)
+    public function insertData($sql, $data)
     {
         $result = false;
 
-        prepareStmt($sql, $data);
+        $this->prepareStmt($sql, $data);
 
-        if ($this->$stmt) {
+        if ($this->stmt) {
 
-            if (mysqli_stmt_execute($this->$stmt)) {
-                $result = mysqli_stmt_insert_id($this->$stmt);
+            if (mysqli_stmt_execute($this->stmt)) {
+                $result = mysqli_stmt_insert_id($this->stmt);
             }
 
-            mysqli_stmt_close($this->$stmt);
+            mysqli_stmt_close($this->stmt);
 
         }
 
@@ -112,7 +131,7 @@ class DataBase {
      * @param array $conditions Значения параметров для условий запроса
      * @return int Количество измененных записей
      */
-    public static function updateData($table, $data, $conditions)
+    public function updateData($table, $data, $conditions)
     {
         $result = false;
 
@@ -120,21 +139,21 @@ class DataBase {
 
         $sql = "update `".$table."` set ";
 
-        $sql .= sqlFragment($data, ", ", $values);
+        $sql .= self::sqlFragment($data, ", ", $values);
 
         if (!empty($conditions)) {
-            $sql .= " where ".sqlFragment($conditions, " and ", $values);
+            $sql .= " where ".self::sqlFragment($conditions, " and ", $values);
         }
 
-        prepareStmt($sql, $values);
+        $this->prepareStmt($sql, $values);
 
-        if ($this->$stmt) {
+        if ($this->stmt) {
 
-            if (mysqli_stmt_execute($this->$stmt)) {
-                $result = mysqli_stmt_affected_rows($this->$stmt);
+            if (mysqli_stmt_execute($this->stmt)) {
+                $result = mysqli_stmt_affected_rows($this->stmt);
             }
 
-            mysqli_stmt_close($this->$stmt);
+            mysqli_stmt_close($this->stmt);
 
         }
 
@@ -148,7 +167,7 @@ class DataBase {
      * @param array &$values Массив для значений параметров фрагмента запроса
      * @return string Фрагмента запроса в виде строки с плейсхолдерами
      */
-    public function sqlFragment($data, $separator, &$values)
+    public static function sqlFragment($data, $separator, &$values)
     {
         $pairs = [];
         foreach ($data as $key => $value) {
@@ -159,27 +178,13 @@ class DataBase {
     }
 
     /**
-     * Создает подключение к базе данных
-     * @param array $config Параметры для установки соединения
-     */
-    private function connect($config)
-    {
-        $this->$link = mysqli_connect($config['host'], $config['user'], $config['pass'], $config['name']);
-
-        if ($this->$link) {
-            mysqli_query($this->$link, "SET NAMES 'utf8'");
-            mysqli_query($this->$link, "SET CHARACTER SET 'utf8'");
-        }
-    }
-
-    /**
      * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
      * @param string $sql SQL запрос с плейсхолдерами вместо значений
      * @param array $data Данные для вставки на место плейсхолдеров
      */
     private function prepareStmt($sql, $data = [])
     {
-        $this->$stmt = mysqli_prepare($this->$link, $sql);
+        $this->stmt = mysqli_prepare($this->link, $sql);
 
         if ($data) {
             $types = '';
@@ -204,7 +209,7 @@ class DataBase {
                 }
             }
 
-            $values = array_merge([$this->$stmt, $types], $stmt_data);
+            $values = array_merge([$this->stmt, $types], $stmt_data);
 
             $func = 'mysqli_stmt_bind_param';
             $func(...$values);

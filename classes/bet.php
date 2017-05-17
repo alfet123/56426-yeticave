@@ -11,7 +11,7 @@ class Bet {
      * @param int $lotId Идентификатор лота
      * @return array Список ставок
      */
-    public static function getBetsByLot($link, $lotId)
+    public static function getBetsByLot($lotId)
     {
         $sql  = 'select bet.date, bet.price, user.id, user.name ';
         $sql .= 'from bet ';
@@ -19,7 +19,7 @@ class Bet {
         $sql .= 'where bet.lot = ? ';
         $sql .= 'order by bet.price desc';
 
-        return DataBase::getData($link, $sql, [$lotId]);
+        return DataBase::instance()->getData($sql, [$lotId]);
     }
 
     /**
@@ -28,7 +28,7 @@ class Bet {
      * @param int $userId Идентификатор пользователя
      * @return array Список ставок
      */
-    public static function getBetsByUser($link, $userId)
+    public static function getBetsByUser($userId)
     {
         $sql  = 'select lot.id, lot.image, lot.name as name, category.name as category, max(bet.price) as price, bet.date ';
         $sql .= 'from lot ';
@@ -38,7 +38,7 @@ class Bet {
         $sql .= 'group by lot.id, bet.id ';
         $sql .= 'order by bet.date desc';
 
-        return DataBase::getData($link, $sql, [$userId]);
+        return DataBase::instance()->getData($sql, [$userId]);
     }
 
     /**
@@ -47,7 +47,7 @@ class Bet {
      * @param array $betData Данные новой ставки
      * @return int Идентификатор новой ставки
      */
-    public static function newBet($link, array $betData)
+    public static function newBet(array $betData)
     {
         $sql  = 'insert into bet set ';
         $sql .= 'date = ?, ';
@@ -55,7 +55,7 @@ class Bet {
         $sql .= 'user = ?, ';
         $sql .= 'lot = ?';
 
-        return DataBase::insertData($link, $sql, $betData);
+        return DataBase::instance()->insertData($sql, $betData);
     }
 
 }

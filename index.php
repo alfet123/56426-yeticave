@@ -1,16 +1,10 @@
 <?php
 session_start();
 
-// подключение файла с функциями
-require_once 'functions.php';
+require_once 'autoload.php';
 
-$link = dbConnect($db);
-
-if ($link) {
-    $categories = getCategories($link);
-    $lots = getLots($link);
-    mysqli_close($link);
-}
+$categories = Category::getAll();
+$lots = Lot::getLots();
 
 ?>
 <!DOCTYPE html>
@@ -23,7 +17,7 @@ if ($link) {
 </head>
 <body>
 
-<?=includeTemplate('templates/header.php', ['avatar' => getAvatar()]); ?>
+<?=includeTemplate('templates/header.php', ['avatar' => User::getAvatar()]); ?>
 
 <?=includeTemplate('templates/main.php', ['categories' => $categories, 'lots' => $lots, 'lot_time_remaining' => $lot_time_remaining]); ?>
 

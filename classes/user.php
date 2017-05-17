@@ -12,24 +12,23 @@ class User {
      * @param string $password Пароль
      * @return array Состояние и данные аутентификации
      */
-    public static function login($link, $email, $password)
+    public static function login($email, $password)
     {
-        if ($user = self::getUserByEmail($link, $email)) {
+        if ($user = self::getUserByEmail($email)) {
             if (password_verify($password, $user['password'])) {
                 $_SESSION['user'] = $user;
-                return ['auth' => true, 'data' => $user];
+                return ['auth' => true, 'field' => ''];
             } else {
-                return ['auth' => false, 'data' => 'password'];
+                return ['auth' => false, 'field' => 'password'];
             }
-        } else {
-            return ['auth' => false, 'data' => 'email'];
         }
+        return ['auth' => false, 'field' => 'email'];
     }
 
     /**
      * Удаляет сеанс пользователя
      */
-    public function logout()
+    public static function logout()
     {
         session_unset();
         session_destroy();
@@ -39,39 +38,33 @@ class User {
      * Проверяет аутентификацию пользователя
      * @return bool Состояние аутентификации
      */
-    public function isAuth()
+    public static function isAuth()
     {
-        if (isset($_SESSION['user'])) {
-            return true;
-        } else {
-            return false;
-        }
+        return isset($_SESSION['user']);
     }
 
     /**
      * Возвращает аватар текущего пользователя
      * @return string Путь к файлу аватара
      */
-    public function getAvatar()
+    public static function getAvatar()
     {
         if (isset($_SESSION['user']) && !empty($_SESSION['user']['avatar'])) {
             return $_SESSION['user']['avatar'];
-        } else {
-            return 'img/user.jpg';
         }
+        return 'img/user.jpg';
     }
 
     /**
      * Возвращает информацию о текущем пользователе
      * @return array Данные о текущем пользователя
      */
-    public function getUserInfo()
+    public static function getUserInfo()
     {
         if (isset($_SESSION['user'])) {
             return $_SESSION['user'];
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -80,7 +73,7 @@ class User {
      * @param array $userData Данные нового пользователя
      * @return int Идентификатор нового пользователя в базе данных
      */
-    public static function newUser($link, array $userData)
+    public static function newUser(array $userData)
     {
         $values = [];
 
@@ -88,7 +81,7 @@ class User {
 
         $sql .= DataBase::sqlFragment($userData, ", ", $values);
 
-        return DataBase::insertData($link, $sql, $values);
+        return DataBase::instance()->insertData($sql, $values);
     }
 
     /**
@@ -97,11 +90,11 @@ class User {
      * @param int $userId Идентификатор пользователя
      * @return array Данные пользователя
      */
-    public static function getUserById($link, $userId)
+    public static function getUserById($userId)
     {
         $sql = 'select * from `user` where `id` = ?';
 
-        $data = DataBase::getData($link, $sql, [$userId]);
+        $data = DataBase::instance()->getData($sql, [$userId]);
 
         if (!empty($data)) {
             return $data[0];
@@ -116,11 +109,11 @@ class User {
      * @param string $email E-mail пользователя
      * @return array Данные пользователя
      */
-    private static function getUserByEmail($link, $email)
+    public static function getUserByEmail($email)
     {
         $sql = 'select * from `user` where `email` = ? limit 1';
 
-        $data = DataBase::getData($link, $sql, [$email]);
+        $data = DataBase::instance()->getData($sql, [$email]);
 
         if (!empty($data)) {
             return $data[0];

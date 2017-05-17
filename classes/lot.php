@@ -7,11 +7,11 @@ class Lot {
 
     /**
      * Получает список лотов
-     * @param mysqli $link Идентификатор подключения к базе данных
+     * @param DataBase $db Объект для подключения к базе данных
      * @param array $ids Список идентификаторов лотов
      * @return array Список лотов
      */
-    public static function getLots($link, array $ids = [])
+    public static function getLots(array $ids = [])
     {
         $sql  = 'select lot.*, category.name as category ';
         $sql .= 'from lot ';
@@ -21,18 +21,18 @@ class Lot {
         }
         $sql .= 'order by date_create desc';
 
-        return DataBase::getData($link, $sql, $ids);
+        return DataBase::instance()->getData($sql, $ids);
     }
 
     /**
      * Получает лот по Id
-     * @param mysqli $link Идентификатор подключения к базе данных
+     * @param DataBase $db Объект для подключения к базе данных
      * @param int $lotId Идентификатор лота
      * @return array Данные лота
      */
-    public static function getLotById($link, $lotId)
+    public static function getLotById($lotId)
     {
-        $data = $this->getLots($link, [$lotId]);
+        $data = self::getLots([$lotId]);
 
         if (!empty($data)) {
             return $data[0];
@@ -43,11 +43,11 @@ class Lot {
 
     /**
      * Добавляет новый лот
-     * @param mysqli $link Идентификатор подключения к базе данных
+     * @param DataBase $db Объект для подключения к базе данных
      * @param array $lotData Данные нового лота
      * @return int Идентификатор нового лота
      */
-    public static function newLot($link, array $lotData)
+    public static function newLot(array $lotData)
     {
         $sql  = 'insert into lot set ';
         $sql .= 'date_create = ?, ';
@@ -60,7 +60,7 @@ class Lot {
         $sql .= 'owner = ?, ';
         $sql .= 'category = ?';
 
-        return DataBase::insertData($link, $sql, $lotData);
+        return DataBase::instance()->insertData($sql, $lotData);
     }
 
 }
