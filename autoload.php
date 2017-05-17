@@ -7,7 +7,17 @@ $classes = [
     'Category' => 'classes/category.php',
     'User' => 'classes/user.php',
     'Lot' => 'classes/lot.php',
-    'Bet' => 'classes/bet.php'
+    'Bet' => 'classes/bet.php',
+    'BaseRecord' => 'classes/baserecord.php',
+    'UserRecord' => 'classes/userrecord.php',
+    'CategoryRecord' => 'classes/categoryrecord.php',
+    'LotRecord' => 'classes/lotrecord.php',
+    'BetRecord' => 'classes/betrecord.php',
+    'BaseFinder' => 'classes/basefinder.php',
+    'UserFinder' => 'classes/userfinder.php',
+    'CategoryFinder' => 'classes/categoryfinder.php',
+    'LotFinder' => 'classes/lotfinder.php',
+    'BetFinder' => 'classes/betfinder.php'
 ];
 
 spl_autoload_register(function ($class) {
