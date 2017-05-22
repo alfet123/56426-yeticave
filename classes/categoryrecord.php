@@ -5,10 +5,8 @@
  */
 class CategoryRecord extends BaseRecord {
 
-    private $id;
-    private $name;
-
-    public static $tableName = 'category';
+    public $id;
+    public $name;
 
 }
 

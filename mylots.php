@@ -8,9 +8,9 @@ if (!User::isAuth()) {
     exit;
 }
 
-$categories = Category::getAll();
+$categories = CategoryFinder::getAll();
 
-$mybets = Bet::getBetsByUser($_SESSION['user']['id']);
+$mybets = BetFinder::getBetsByUser($_SESSION['user']['id']);
 
 ?>
 <!DOCTYPE html>

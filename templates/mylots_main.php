@@ -3,7 +3,7 @@
         <ul class="nav__list container">
             <?php foreach ($categories as $key => $value): ?>
             <li class="nav__item">
-                <a href="all-lots.html"><?=$value['name'];?></a>
+                <a href="all-lots.html"><?=$value->name;?></a>
             </li>
             <?php endforeach; ?>
         </ul>
@@ -15,21 +15,21 @@
             <tr class="rates__item">
                 <td class="rates__info">
                     <div class="rates__img">
-                        <img src="../<?=$value['image'];?>" width="54" height="40" alt="Сноуборд">
+                        <img src="../<?=$value->image;?>" width="54" height="40" alt="Сноуборд">
                     </div>
-                    <h3 class="rates__title"><a href="lot.php?id=<?=$value['id'];?>"><?=$value['name'];?></a></h3>
+                    <h3 class="rates__title"><a href="lot.php?id=<?=$value->id;?>"><?=$value->lot;?></a></h3>
                 </td>
                 <td class="rates__category">
-                    <?=$value['category'];?>
+                    <?=$value->category;?>
                 </td>
                 <td class="rates__timer">
                     <div class="timer timer--finishing"><?=$lot_time_remaining;?></div>
                 </td>
                 <td class="rates__price">
-                    <?=$value['price'];?>
+                    <?=$value->price;?>
                 </td>
                 <td class="rates__time">
-                    <?=timeInRelativeFormat(strtotime($value['date']));?>
+                    <?=timeInRelativeFormat(strtotime($value->date));?>
                 </td>
             </tr>
             <?php endforeach; ?>

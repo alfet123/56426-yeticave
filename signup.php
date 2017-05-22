@@ -3,7 +3,7 @@ session_start();
 
 require_once 'autoload.php';
 
-$categories = Category::getAll();
+$categories = CategoryFinder::getAll();
 
 // массив для данных из формы
 $formData = [
@@ -45,7 +45,7 @@ if (isset($_POST['send'])) {
         setFormError($formClasses, $formMessages, 'email', 'Введите правильный e-mail');
     }
 
-    if (User::getUserByEmail($_POST['email'])) {
+    if (UserFinder::getUserByEmail($_POST['email'])) {
         setFormError($formClasses, $formMessages, 'email', 'Пользователь с указанным e-mail уже существует');
     }
 
@@ -62,19 +62,20 @@ if (isset($_POST['send'])) {
 // проверка, что форма заполнена полностью
 if (isset($_POST['send']) && empty($formClasses['form'])) {
     // Добавление пользователя
-    $userData = [];
-    $userData['date_reg'] = date("Y-m-d H:i:s");
-    $userData['email'] = $formData['email'];
-    $userData['name'] = $formData['name'];
-    $userData['password'] = password_hash($formData['password'], PASSWORD_DEFAULT);
-    if ($fileMoved) {
-        $userData['avatar'] = $target;
+    $newUser = new UserRecord();
+
+    $newUser->date_reg = date("Y-m-d H:i:s");
+    $newUser->email = $formData['email'];
+    $newUser->name = $formData['name'];
+    $newUser->password = password_hash($formData['password'], PASSWORD_DEFAULT);
+    $newUser->avatar = $fileMoved ? $target : null;
+    $newUser->contacts = $formData['contacts'];
+
+    $newUser->save();
+
+    if ($newUser->id) {
+        $_SESSION['user'] = ['id' => $newUser->id, 'name' => $newUser->name, 'avatar' => $newUser->avatar];
     }
-    $userData['contacts'] = $formData['contacts'];
-
-    $userId = User::newUser($userData);
-
-    $_SESSION['user'] = User::getUserById($userId);
 
     header("Location: index.php");
     exit;

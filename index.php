@@ -3,8 +3,8 @@ session_start();
 
 require_once 'autoload.php';
 
-$categories = Category::getAll();
-$lots = Lot::getLots();
+$categories = CategoryFinder::getAll();
+$lots = LotFinder::getLots();
 
 ?>
 <!DOCTYPE html>

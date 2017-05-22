@@ -5,13 +5,34 @@
  */
 class BetRecord extends BaseRecord {
 
-    private $id;
-    private $date;
-    private $price;
-    private $user;
-    private $lot;
+    public $id;
+    public $date;
+    public $price;
+    public $user;
+    public $lot;
+    public $category;
+    public $image;
 
-    public static $tableName = 'bet';
+    /**
+     * Добавляет новую ставку
+     */
+    public function save()
+    {
+        $sql  = 'insert into bet set ';
+        $sql .= 'date = ?, ';
+        $sql .= 'price = ?, ';
+        $sql .= 'user = ?, ';
+        $sql .= 'lot = ?';
+
+        $data = [
+            $this->date,
+            $this->price,
+            $this->user,
+            $this->lot
+        ];
+
+        $this->id = DataBase::instance()->insertData($sql, $data);
+    }
 
 }
 

@@ -8,7 +8,7 @@ if (!User::isAuth()) {
     exit;
 }
 
-$categories = Category::getAll();
+$categories = CategoryFinder::getAll();
 
 // массив для данных из формы
 $formData = [
@@ -71,19 +71,21 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
     // Добавление лота
     $now = getdate();
 
-    $lotData   = [date("Y-m-d H:i:s")];
-    $lotData[] = $formData['name'];
-    $lotData[] = $formData['description'];
-    $lotData[] = $target;
-    $lotData[] = $formData['price'];
-    $lotData[] = date("Y-m-d H:i:s", strtotime($formData['date_expire']." ".$now['hours'].":".$now['minutes'].":".$now['seconds']));
-    $lotData[] = $formData['step'];
-    $lotData[] = $_SESSION['user']['id'];
-    $lotData[] = $formData['category'];
+    $newLot = new LotRecord();
 
-    $newId = Lot::newLot($lotData);
+    $newLot->date_create = date("Y-m-d H:i:s");
+    $newLot->name = $formData['name'];
+    $newLot->description = $formData['description'];
+    $newLot->image = $target;
+    $newLot->price = $formData['price'];
+    $newLot->date_expire = date("Y-m-d H:i:s", strtotime($formData['date_expire']." ".$now['hours'].":".$now['minutes'].":".$now['seconds']));
+    $newLot->step = $formData['step'];
+    $newLot->owner = $_SESSION['user']['id'];
+    $newLot->category = $formData['category'];
 
-    header("Location: lot.php?id=$newId");
+    $newLot->save();
+
+    header("Location: lot.php?id=".$newLot->id);
     exit;
 }
 

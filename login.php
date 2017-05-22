@@ -3,7 +3,7 @@ session_start();
 
 require_once 'autoload.php';
 
-$categories = Category::getAll();
+$categories = CategoryFinder::getAll();
 
 // массив для данных из формы
 $formData = [

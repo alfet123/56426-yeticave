@@ -5,15 +5,34 @@
  */
 class UserRecord extends BaseRecord {
 
-    private $id;
-    private $date_reg;
-    private $email;
-    private $name;
-    private $password;
-    private $avatar;
-    private $contacts;
+    public $id;
+    public $date_reg;
+    public $email;
+    public $name;
+    public $password;
+    public $avatar;
+    public $contacts;
 
-    public static $tableName = 'user';
+    /**
+     * Добавляет нового пользователя
+     */
+    public function save()
+    {
+        $data = [];
+        $params = [];
+
+        foreach ($this as $key => $value) {
+            if ($value) {
+                $data[] = $value;
+                $params[] = $key.' = ?';
+            }
+        }
+
+        $sql  = 'insert into user set ';
+        $sql .= implode(', ', $params);
+
+        $this->id = DataBase::instance()->insertData($sql, $data);
+    }
 
 }
 
