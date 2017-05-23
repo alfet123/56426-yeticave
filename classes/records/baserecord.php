@@ -28,10 +28,7 @@ abstract class BaseRecord {
         $this->id = DataBase::instance()->insertData($sql, $data);
     }
 
-    protected function tableName()
-    {
-
-    }
+    abstract protected function tableName();
 
 }
 
