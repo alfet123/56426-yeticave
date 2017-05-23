@@ -17,7 +17,7 @@ $lots = LotFinder::getLots();
 </head>
 <body>
 
-<?=includeTemplate('templates/header.php', ['avatar' => User::getAvatar()]); ?>
+<?=includeTemplate('templates/header.php', ['avatar' => Auth::getAvatar()]); ?>
 
 <?=includeTemplate('templates/main.php', ['categories' => $categories, 'lots' => $lots, 'lot_time_remaining' => $lot_time_remaining]); ?>
 

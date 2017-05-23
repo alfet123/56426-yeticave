@@ -3,7 +3,7 @@ session_start();
 
 require_once 'autoload.php';
 
-if (!User::isAuth()) {
+if (!Auth::isAuth()) {
     header("Location: login.php");
     exit;
 }
@@ -83,7 +83,7 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
     $newLot->owner = $_SESSION['user']['id'];
     $newLot->category = $formData['category'];
 
-    $newLot->save();
+    $newLot->insert();
 
     header("Location: lot.php?id=".$newLot->id);
     exit;
@@ -101,7 +101,7 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
 </head>
 <body>
 
-<?=includeTemplate('templates/header.php', ['avatar' => User::getAvatar()]); ?>
+<?=includeTemplate('templates/header.php', ['avatar' => Auth::getAvatar()]); ?>
 
 <?=includeTemplate('templates/add_main.php', ['categories' => $categories, 'data' => $formData, 'class' => $formClasses, 'message' => $formMessages]); ?>
 

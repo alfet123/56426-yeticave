@@ -5,8 +5,12 @@
  */
 class CategoryRecord extends BaseRecord {
 
-    public $id;
     public $name;
+
+    protected function tableName()
+    {
+        return 'category';
+    }
 
 }
 

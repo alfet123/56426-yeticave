@@ -3,7 +3,7 @@ session_start();
 
 require_once 'autoload.php';
 
-User::logout();
+Auth::logout();
 
 header("Location: /");
 ?>

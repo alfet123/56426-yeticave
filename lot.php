@@ -59,7 +59,7 @@ if (isset($_POST['cost'])) {
         $newBet->user = $_SESSION['user']['id'];
         $newBet->lot = $lotCurrent->id;
 
-        $newBet->save();
+        $newBet->insert();
 
         header("Location: mylots.php");
         exit;
@@ -78,7 +78,7 @@ if (isset($_POST['cost'])) {
 </head>
 <body>
 
-<?=includeTemplate('templates/header.php', ['avatar' => User::getAvatar()]); ?>
+<?=includeTemplate('templates/header.php', ['avatar' => Auth::getAvatar()]); ?>
 
 <?=includeTemplate('templates/lot_main.php', ['categories' => $categories, 'lot' => $lotCurrent, 'lot_extra' => $lotExtraData, 'lot_time_remaining' => $lot_time_remaining, 'bets' => $bets]); ?>
 

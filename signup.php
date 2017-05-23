@@ -71,7 +71,7 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
     $newUser->avatar = $fileMoved ? $target : null;
     $newUser->contacts = $formData['contacts'];
 
-    $newUser->save();
+    $newUser->insert();
 
     if ($newUser->id) {
         $_SESSION['user'] = ['id' => $newUser->id, 'name' => $newUser->name, 'avatar' => $newUser->avatar];
@@ -93,7 +93,7 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
 </head>
 <body>
 
-<?=includeTemplate('templates/header.php', ['avatar' => User::getAvatar()]); ?>
+<?=includeTemplate('templates/header.php', ['avatar' => Auth::getAvatar()]); ?>
 
 <?=includeTemplate('templates/signup_main.php', ['categories' => $categories, 'data' => $formData, 'class' => $formClasses, 'message' => $formMessages]); ?>
 

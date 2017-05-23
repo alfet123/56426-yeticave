@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Class User
+ * Class Auth
  */
-class User {
+class Auth {
 
     /**
      * Выполняет аутентификацию пользователя

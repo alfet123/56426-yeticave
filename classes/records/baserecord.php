@@ -1,22 +1,16 @@
 <?php
 
 /**
- * Class UserRecord
+ * Class BaseRecord
  */
-class UserRecord extends BaseRecord {
+abstract class BaseRecord {
 
     public $id;
-    public $date_reg;
-    public $email;
-    public $name;
-    public $password;
-    public $avatar;
-    public $contacts;
 
     /**
-     * Добавляет нового пользователя
+     * Добавляет новую запись
      */
-    public function save()
+    public function insert()
     {
         $data = [];
         $params = [];
@@ -28,10 +22,15 @@ class UserRecord extends BaseRecord {
             }
         }
 
-        $sql  = 'insert into user set ';
+        $sql  = 'insert into '.$this->tableName().' set ';
         $sql .= implode(', ', $params);
 
         $this->id = DataBase::instance()->insertData($sql, $data);
+    }
+
+    protected function tableName()
+    {
+
     }
 
 }
