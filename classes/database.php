@@ -161,6 +161,39 @@ class DataBase {
     }
 
     /**
+     * Выполняет запрос для удаления данных
+     * @param string $table Название таблицы
+     * @param array $conditions Значения параметров для условий запроса
+     * @return int Количество удаленных записей
+     */
+    public function deleteData($table, $conditions)
+    {
+        $result = false;
+
+        $values = [];
+
+        $sql = "delete from ".$table;
+
+        if (!empty($conditions)) {
+            $sql .= " where ".self::sqlFragment($conditions, " and ", $values);
+        }
+
+        $this->prepareStmt($sql, $values);
+
+        if ($this->stmt) {
+
+            if (mysqli_stmt_execute($this->stmt)) {
+                $result = mysqli_stmt_affected_rows($this->stmt);
+            }
+
+            mysqli_stmt_close($this->stmt);
+
+        }
+
+        return $result;
+    }
+
+    /**
      * Создает фрагмент запроса с плейсхолдерами
      * @param array $data Ассоциативный массив с исходными данными
      * @param string $separator Строка-разделитель

@@ -28,6 +28,30 @@ abstract class BaseRecord {
         $this->id = DataBase::instance()->insertData($sql, $data);
     }
 
+    /**
+     * Обновляет запись с указанным id
+     */
+    public function update()
+    {
+        $data = [];
+
+        foreach ($this as $key => $value) {
+            if ($key != 'id' && $value) {
+                $data[$key] = $value;
+            }
+        }
+
+        return DataBase::instance()->updateData($this->tableName(), $data, ['id' => $this->id]);
+    }
+
+    /**
+     * Удаляет запись с указанным id
+     */
+    public function delete()
+    {
+        return DataBase::instance()->deleteData($this->tableName(), ['id' => $this->id]);
+    }
+
     abstract protected function tableName();
 
 }
