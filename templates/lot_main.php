@@ -34,12 +34,12 @@
                         </div>
                     </div>
                     <form class="lot-item__form" action="lot.php?id=<?=$lot->id;?>" method="post">
-                        <div class="lot-item__form-item <?=$lot_extra['class'];?>">
+                        <div class="lot-item__form-item <?=$class['cost'];?>">
                             <label for="cost">Ваша ставка</label>
                             <input id="cost" type="text" name="cost" placeholder="<?=$lot_extra['min-bet'];?>"> <!-- number required placeholder="12 000" -->
-                            <span class="form__error"><?=$lot_extra['message'];?></span>
+                            <span class="form__error"><?=$message['cost'];?></span>
                         </div>
-                        <button type="submit" class="button">Сделать ставку</button>
+                        <button type="submit" class="button" name="send">Сделать ставку</button>
                     </form>
                 </div>
             <?php endif; ?>

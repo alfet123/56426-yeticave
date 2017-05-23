@@ -36,15 +36,16 @@ if (isset($_SESSION['user']) && count($bets)) {
     }
 }
 
-$lotExtraData['class'] = '';
-$lotExtraData['message'] = '';
+// $lotExtraData['class'] = '';
+// $lotExtraData['message'] = '';
 
-if (isset($_POST['cost'])) {
+// проверка, что была отправка формы
+if (isset($_POST['send'])) {
 
-    if (empty($_POST['cost'])) {
-        $lotExtraData['class'] = 'form__item--invalid';
-        $lotExtraData['message'] = 'Заполните это поле';
-    } elseif (!is_numeric($_POST['cost'])) {
+    $form = new LotForm();
+
+/*
+    if (!is_numeric($_POST['cost'])) {
         $lotExtraData['class'] = 'form__item--invalid';
         $lotExtraData['message'] = 'Введите числовое значение';
     } elseif ($_POST['cost'] < $lotExtraData['min-bet']) {
@@ -64,6 +65,8 @@ if (isset($_POST['cost'])) {
         header("Location: mylots.php");
         exit;
     }
+*/
+
 }
 
 ?>
@@ -80,7 +83,7 @@ if (isset($_POST['cost'])) {
 
 <?=includeTemplate('templates/header.php', ['avatar' => Auth::getAvatar()]); ?>
 
-<?=includeTemplate('templates/lot_main.php', ['categories' => $categories, 'lot' => $lotCurrent, 'lot_extra' => $lotExtraData, 'lot_time_remaining' => $lot_time_remaining, 'bets' => $bets]); ?>
+<?=includeTemplate('templates/lot_main.php', ['categories' => $categories, 'lot' => $lotCurrent, 'lot_extra' => $lotExtraData, 'lot_time_remaining' => $lot_time_remaining, 'bets' => $bets, 'class' => $form->formClasses, 'message' => $form->formMessages]); ?>
 
 <?=includeTemplate('templates/footer.php', ['categories' => $categories]); ?>
 

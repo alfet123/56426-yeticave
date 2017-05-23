@@ -5,41 +5,15 @@ require_once 'autoload.php';
 
 $categories = CategoryFinder::getAll();
 
-// массив для данных из формы
-$formData = [
-    'email' => '',
-    'password' => ''
-];
-
-// массив для дополнительных классов
-$formClasses = ['form' => ''];
-// массив для сообщений
-$formMessages = [];
-
-foreach ($formData as $key => $value) {
-    $formClasses[$key] = $value;
-    $formMessages[$key] = $value;
-}
-
 // проверка, что была отправка формы
 if (isset($_POST['send'])) {
 
-    $errorMessages = [
-        'email' => 'Введите e-mail',
-        'password' => 'Введите пароль'
-    ];
-
-    foreach ($errorMessages as $key => $value) {
-        if (empty($_POST[$key])) {
-            setFormError($formClasses, $formMessages, $key, $value);
-        } else {
-            $formData[$key] = $_POST[$key];
-        }
-    }
+    $form = new LoginForm();
 
 }
 
 // проверка, что форма заполнена полностью
+/*
 if (isset($_POST['send']) && empty($formClasses['form'])) {
 
     $email = $_POST['email'];
@@ -62,6 +36,7 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
     setFormError($formClasses, $formMessages, $user['field'], $errorAuthMessages[$user['field']]);
 
 }
+*/
 
 ?>
 
@@ -77,7 +52,7 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
 
 <?=includeTemplate('templates/header.php', ['avatar' => Auth::getAvatar()]); ?>
 
-<?=includeTemplate('templates/login_main.php', ['categories' => $categories, 'data' => $formData, 'class' => $formClasses, 'message' => $formMessages]); ?>
+<?=includeTemplate('templates/login_main.php', ['categories' => $categories, 'data' => $form->formData, 'class' => $form->formClasses, 'message' => $form->formMessages]); ?>
 
 <?=includeTemplate('templates/footer.php', ['categories' => $categories]); ?>
 

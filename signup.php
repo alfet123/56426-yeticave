@@ -5,42 +5,12 @@ require_once 'autoload.php';
 
 $categories = CategoryFinder::getAll();
 
-// массив для данных из формы
-$formData = [
-    'email' => '',
-    'password' => '',
-    'name' => '',
-    'contacts' => ''
-];
-
-// массив для дополнительных классов
-$formClasses = ['form' => ''];
-// массив для сообщений
-$formMessages = [];
-
-foreach ($formData as $key => $value) {
-    $formClasses[$key] = $value;
-    $formMessages[$key] = $value;
-}
-
 // проверка, что была отправка формы
 if (isset($_POST['send'])) {
 
-    $errorMessages = [
-        'email' => 'Введите e-mail',
-        'password' => 'Введите пароль',
-        'name' => 'Введите ваше имя',
-        'contacts' => 'Введите контактные данные'
-    ];
+    $form = new SignupForm();
 
-    foreach ($errorMessages as $key => $value) {
-        if (empty($_POST[$key])) {
-            setFormError($formClasses, $formMessages, $key, $value);
-        } else {
-            $formData[$key] = $_POST[$key];
-        }
-    }
-
+/*
     if (!empty($_POST['email']) && !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         setFormError($formClasses, $formMessages, 'email', 'Введите правильный e-mail');
     }
@@ -57,9 +27,12 @@ if (isset($_POST['send'])) {
         $target = "img/$filename";
         $fileMoved = move_uploaded_file($source, $target);
     }
+*/
+
 }
 
 // проверка, что форма заполнена полностью
+/*
 if (isset($_POST['send']) && empty($formClasses['form'])) {
     // Добавление пользователя
     $newUser = new UserRecord();
@@ -80,6 +53,7 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
     header("Location: index.php");
     exit;
 }
+*/
 
 ?>
 
@@ -95,7 +69,7 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
 
 <?=includeTemplate('templates/header.php', ['avatar' => Auth::getAvatar()]); ?>
 
-<?=includeTemplate('templates/signup_main.php', ['categories' => $categories, 'data' => $formData, 'class' => $formClasses, 'message' => $formMessages]); ?>
+<?=includeTemplate('templates/signup_main.php', ['categories' => $categories, 'data' => $form->formData, 'class' => $form->formClasses, 'message' => $form->formMessages]); ?>
 
 <?=includeTemplate('templates/footer.php', ['categories' => $categories]); ?>
 

@@ -10,38 +10,12 @@ if (!Auth::isAuth()) {
 
 $categories = CategoryFinder::getAll();
 
-// массив для данных из формы
-$formData = [
-    'name' => '',
-    'category' => '',
-    'description' => '',
-    'price' => '',
-    'step' => '',
-    'date_expire' => ''
-];
-
-// массив для дополнительных классов
-$formClasses = ['form' => ''];
-// массив для сообщений
-$formMessages = [];
-
-foreach ($formData as $key => $value) {
-    $formClasses[$key] = $value;
-    $formMessages[$key] = $value;
-}
-
 // проверка, что была отправка формы
 if (isset($_POST['send'])) {
 
-    //проверка пустых значений
-    foreach ($formData as $key => $value) {
-        if (empty($_POST[$key])) {
-            setFormError($formClasses, $formMessages, $key, 'Заполните это поле');
-        } else {
-            $formData[$key] = $_POST[$key];
-        }
-    }
+    $form = new AddForm();
 
+/*
     //проверка числовых значений
     if (!empty($formData['price']) && !is_numeric($formData['price'])) {
         setFormError($formClasses, $formMessages, 'price', 'Введите числовое значение');
@@ -63,10 +37,12 @@ if (isset($_POST['send'])) {
             setFormError($formClasses, $formMessages, 'image', 'Выберите файл для загрузки');
         }
     }
+*/
 
 }
 
 // проверка, что форма заполнена полностью
+/*
 if (isset($_POST['send']) && empty($formClasses['form'])) {
     // Добавление лота
     $now = getdate();
@@ -88,6 +64,7 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
     header("Location: lot.php?id=".$newLot->id);
     exit;
 }
+*/
 
 ?>
 
@@ -103,7 +80,7 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
 
 <?=includeTemplate('templates/header.php', ['avatar' => Auth::getAvatar()]); ?>
 
-<?=includeTemplate('templates/add_main.php', ['categories' => $categories, 'data' => $formData, 'class' => $formClasses, 'message' => $formMessages]); ?>
+<?=includeTemplate('templates/add_main.php', ['categories' => $categories, 'data' => $form->formData, 'class' => $form->formClasses, 'message' => $form->formMessages]); ?>
 
 <?=includeTemplate('templates/footer.php', ['categories' => $categories]); ?>
 
