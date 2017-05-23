@@ -11,6 +11,11 @@ function dataFiltering($data)
         foreach ($data as $key => $value) {
             $result[$key] = dataFiltering($value);
         }
+    } elseif (is_object($data)) {
+        foreach ($data as $key => $value) {
+            $data->$key = dataFiltering($value);
+        }
+        return $data;
     } else {
         $result = htmlspecialchars($data);
     }
@@ -59,7 +64,7 @@ function setFormError(&$formClasses, &$formMessages, $field, $message)
 // функция определения максимальной ставки
 function getMaxBet($bets)
 {
-    $betPrice = array_map(function($b) { return $b['price']; }, $bets);
+    $betPrice = array_map(function($b) { return $b->price; }, $bets);
     return (count($betPrice)) ? max($betPrice) : 0;
 }
 

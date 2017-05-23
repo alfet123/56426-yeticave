@@ -3,8 +3,8 @@ session_start();
 
 require_once 'autoload.php';
 
-$categories = Category::getAll();
-$lots = Lot::getLots();
+$categories = CategoryFinder::getAll();
+$lots = LotFinder::getLots();
 
 ?>
 <!DOCTYPE html>
@@ -17,7 +17,7 @@ $lots = Lot::getLots();
 </head>
 <body>
 
-<?=includeTemplate('templates/header.php', ['avatar' => User::getAvatar()]); ?>
+<?=includeTemplate('templates/header.php', ['avatar' => Auth::getAvatar()]); ?>
 
 <?=includeTemplate('templates/main.php', ['categories' => $categories, 'lots' => $lots, 'lot_time_remaining' => $lot_time_remaining]); ?>
 

@@ -3,7 +3,7 @@ session_start();
 
 require_once 'autoload.php';
 
-$categories = Category::getAll();
+$categories = CategoryFinder::getAll();
 
 // массив для данных из формы
 $formData = [
@@ -46,7 +46,7 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
     $password = $_POST['password'];
 
     // аутентификация
-    $user = User::login($email, $password);
+    $user = Auth::login($email, $password);
 
     if ($user['auth']) {
         header("Location: /");
@@ -75,7 +75,7 @@ if (isset($_POST['send']) && empty($formClasses['form'])) {
 </head>
 <body>
 
-<?=includeTemplate('templates/header.php', ['avatar' => User::getAvatar()]); ?>
+<?=includeTemplate('templates/header.php', ['avatar' => Auth::getAvatar()]); ?>
 
 <?=includeTemplate('templates/login_main.php', ['categories' => $categories, 'data' => $formData, 'class' => $formClasses, 'message' => $formMessages]); ?>
 

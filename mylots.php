@@ -3,14 +3,14 @@ session_start();
 
 require_once 'autoload.php';
 
-if (!User::isAuth()) {
+if (!Auth::isAuth()) {
     header("Location: login.php");
     exit;
 }
 
-$categories = Category::getAll();
+$categories = CategoryFinder::getAll();
 
-$mybets = Bet::getBetsByUser($_SESSION['user']['id']);
+$mybets = BetFinder::getBetsByUser($_SESSION['user']['id']);
 
 ?>
 <!DOCTYPE html>
@@ -23,7 +23,7 @@ $mybets = Bet::getBetsByUser($_SESSION['user']['id']);
 </head>
 <body>
 
-<?=includeTemplate('templates/header.php', ['avatar' => User::getAvatar()]); ?>
+<?=includeTemplate('templates/header.php', ['avatar' => Auth::getAvatar()]); ?>
 
 <?=includeTemplate('templates/mylots_main.php', ['categories' => $categories, 'mybets' => $mybets, 'lot_time_remaining' => $lot_time_remaining]); ?>
 
