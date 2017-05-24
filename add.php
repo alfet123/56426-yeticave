@@ -12,61 +12,18 @@ $categories = CategoryFinder::getAll();
 
 $form = new AddForm();
 
-// проверка, что была отправка формы
+// Проверка, что была отправка формы
 if (isset($_POST['send'])) {
 
     $form->checkEmpty();
 
-/*
-    //проверка числовых значений
-    if (!empty($formData['price']) && !is_numeric($formData['price'])) {
-        setFormError($formClasses, $formMessages, 'price', 'Введите числовое значение');
-    }
-    if (!empty($formData['step']) && !is_numeric($formData['step'])) {
-        setFormError($formClasses, $formMessages, 'step', 'Введите числовое значение');
-    }
+    $form->checkNumberFields();
 
-    // cохранение загруженного файла
-    if (isset($_FILES['image'])) {
-        $file = $_FILES['image'];
-        $filename = $file['name'];
-        $source = $file['tmp_name'];
-        $target = "img/$filename";
-        if (move_uploaded_file($source, $target)) {
-            $formData['image'] = $target;
-            $formClasses['image'] = 'form__item--uploaded';
-        } else {
-            setFormError($formClasses, $formMessages, 'image', 'Выберите файл для загрузки');
-        }
-    }
-*/
+    $form->saveLotImage();
+
+    $form->saveNewLot();
 
 }
-
-// проверка, что форма заполнена полностью
-/*
-if (isset($_POST['send']) && empty($formClasses['form'])) {
-    // Добавление лота
-    $now = getdate();
-
-    $newLot = new LotRecord();
-
-    $newLot->date_create = date("Y-m-d H:i:s");
-    $newLot->name = $formData['name'];
-    $newLot->description = $formData['description'];
-    $newLot->image = $target;
-    $newLot->price = $formData['price'];
-    $newLot->date_expire = date("Y-m-d H:i:s", strtotime($formData['date_expire']." ".$now['hours'].":".$now['minutes'].":".$now['seconds']));
-    $newLot->step = $formData['step'];
-    $newLot->owner = $_SESSION['user']['id'];
-    $newLot->category = $formData['category'];
-
-    $newLot->insert();
-
-    header("Location: lot.php?id=".$newLot->id);
-    exit;
-}
-*/
 
 ?>
 
