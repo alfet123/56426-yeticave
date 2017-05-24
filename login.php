@@ -5,38 +5,16 @@ require_once 'autoload.php';
 
 $categories = CategoryFinder::getAll();
 
-// проверка, что была отправка формы
+$form = new LoginForm();
+
+// Проверка, что была отправка формы
 if (isset($_POST['send'])) {
 
-    $form = new LoginForm();
+    $form->checkEmpty();
+
+    $form->userLogin();
 
 }
-
-// проверка, что форма заполнена полностью
-/*
-if (isset($_POST['send']) && empty($formClasses['form'])) {
-
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    // аутентификация
-    $user = Auth::login($email, $password);
-
-    if ($user['auth']) {
-        header("Location: /");
-        exit;
-    }
-
-    $errorAuthMessages = [
-        'email' => 'Вы ввели неверный e-mail',
-        'password' => 'Вы ввели неверный пароль'
-    ];
-
-    $formData[$user['field']] = '';
-    setFormError($formClasses, $formMessages, $user['field'], $errorAuthMessages[$user['field']]);
-
-}
-*/
 
 ?>
 

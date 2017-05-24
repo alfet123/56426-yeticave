@@ -19,6 +19,9 @@ class LotForm extends BaseForm {
         'cost' => 'Введите ставку'
     ];
 
+    /**
+     * Конструктор
+     */
     public function __construct()
     {
         parent::__construct();

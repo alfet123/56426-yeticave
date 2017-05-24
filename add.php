@@ -10,10 +10,12 @@ if (!Auth::isAuth()) {
 
 $categories = CategoryFinder::getAll();
 
+$form = new AddForm();
+
 // проверка, что была отправка формы
 if (isset($_POST['send'])) {
 
-    $form = new AddForm();
+    $form->checkEmpty();
 
 /*
     //проверка числовых значений

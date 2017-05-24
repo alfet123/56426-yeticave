@@ -31,7 +31,20 @@ abstract class BaseForm {
     public function __construct()
     {
         $this->init();
-        $this->checkEmpty();
+    }
+
+    /**
+     * Проверка пустых значений
+     */
+    public function checkEmpty()
+    {
+        foreach ($this->emptyMessages as $key => $value) {
+            if (empty($_POST[$key])) {
+                $this->setFormError($key, $value);
+            } else {
+                $this->formData[$key] = $_POST[$key];
+            }
+        }
     }
 
     /**
@@ -43,20 +56,6 @@ abstract class BaseForm {
         foreach ($this->formData as $key => $value) {
             $this->formClasses[$key] = '';
             $this->formMessages[$key] = '';
-        }
-    }
-
-    /**
-     * Проверка пустых значений
-     */
-    protected function checkEmpty()
-    {
-        foreach ($this->emptyMessages as $key => $value) {
-            if (empty($_POST[$key])) {
-                $this->setFormError($key, $value);
-            } else {
-                $this->formData[$key] = $_POST[$key];
-            }
         }
     }
 

@@ -29,6 +29,9 @@ class AddForm extends BaseForm {
         'date_expire' => 'Введите дату окончания'
     ];
 
+    /**
+     * Конструктор
+     */
     public function __construct()
     {
         parent::__construct();

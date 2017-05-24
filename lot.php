@@ -39,10 +39,12 @@ if (isset($_SESSION['user']) && count($bets)) {
 // $lotExtraData['class'] = '';
 // $lotExtraData['message'] = '';
 
+$form = new LotForm();
+
 // проверка, что была отправка формы
 if (isset($_POST['send'])) {
 
-    $form = new LotForm();
+    $form->checkEmpty();
 
 /*
     if (!is_numeric($_POST['cost'])) {

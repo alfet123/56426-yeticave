@@ -5,55 +5,20 @@ require_once 'autoload.php';
 
 $categories = CategoryFinder::getAll();
 
-// проверка, что была отправка формы
+$form = new SignupForm();
+
+// Проверка, что была отправка формы
 if (isset($_POST['send'])) {
 
-    $form = new SignupForm();
+    $form->checkEmpty();
 
-/*
-    if (!empty($_POST['email']) && !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-        setFormError($formClasses, $formMessages, 'email', 'Введите правильный e-mail');
-    }
+    $form->checkEmail();
 
-    if (UserFinder::getUserByEmail($_POST['email'])) {
-        setFormError($formClasses, $formMessages, 'email', 'Пользователь с указанным e-mail уже существует');
-    }
+    $form->saveAvatar();
 
-    // cохранение загруженного файла
-    if (isset($_FILES['avatar'])) {
-        $file = $_FILES['avatar'];
-        $filename = $file['name'];
-        $source = $file['tmp_name'];
-        $target = "img/$filename";
-        $fileMoved = move_uploaded_file($source, $target);
-    }
-*/
+    $form->saveNewUser();
 
 }
-
-// проверка, что форма заполнена полностью
-/*
-if (isset($_POST['send']) && empty($formClasses['form'])) {
-    // Добавление пользователя
-    $newUser = new UserRecord();
-
-    $newUser->date_reg = date("Y-m-d H:i:s");
-    $newUser->email = $formData['email'];
-    $newUser->name = $formData['name'];
-    $newUser->password = password_hash($formData['password'], PASSWORD_DEFAULT);
-    $newUser->avatar = $fileMoved ? $target : null;
-    $newUser->contacts = $formData['contacts'];
-
-    $newUser->insert();
-
-    if ($newUser->id) {
-        $_SESSION['user'] = ['id' => $newUser->id, 'name' => $newUser->name, 'avatar' => $newUser->avatar];
-    }
-
-    header("Location: index.php");
-    exit;
-}
-*/
 
 ?>
 
