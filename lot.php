@@ -23,51 +23,18 @@ if (!$lotCurrent) {
 
 $bets = BetFinder::getBetsByLot($lotCurrent->id);
 
-$lotExtraData['curr-bet'] = (count($bets)) ? getMaxBet($bets) : $lotCurrent->price;
-$lotExtraData['min-bet'] = $lotExtraData['curr-bet'] + ((count($bets)) ? $lotCurrent->step : 0);
-
-// по умолчанию разрешается делать ставку
-$lotExtraData['no-bet'] = true;
-
-// если открыт сеанс и есть ставки, проверка кто сделал последнюю ставку
-if (isset($_SESSION['user']) && count($bets)) {
-    if (($_SESSION['user']['id'] == $bets[0]->id)) {
-        $lotExtraData['no-bet'] = false;
-    }
-}
-
-// $lotExtraData['class'] = '';
-// $lotExtraData['message'] = '';
-
 $form = new LotForm();
+
+$form->initExtraData($lotCurrent, $bets);
 
 // проверка, что была отправка формы
 if (isset($_POST['send'])) {
 
     $form->checkEmpty();
 
-/*
-    if (!is_numeric($_POST['cost'])) {
-        $lotExtraData['class'] = 'form__item--invalid';
-        $lotExtraData['message'] = 'Введите числовое значение';
-    } elseif ($_POST['cost'] < $lotExtraData['min-bet']) {
-        $lotExtraData['class'] = 'form__item--invalid';
-        $lotExtraData['message'] = 'Минимальная ставка '.$lotExtraData['min-bet'];
-    } else {
-        // Добавление ставки
-        $newBet = new BetRecord();
+    $form->checkBetValue();
 
-        $newBet->date = date("Y-m-d H:i:s");
-        $newBet->price = htmlspecialchars($_POST['cost']);
-        $newBet->user = $_SESSION['user']['id'];
-        $newBet->lot = $lotCurrent->id;
-
-        $newBet->insert();
-
-        header("Location: mylots.php");
-        exit;
-    }
-*/
+    $form->saveNewBet($lotCurrent->id);
 
 }
 
@@ -85,7 +52,7 @@ if (isset($_POST['send'])) {
 
 <?=includeTemplate('templates/header.php', ['avatar' => Auth::getAvatar()]); ?>
 
-<?=includeTemplate('templates/lot_main.php', ['categories' => $categories, 'lot' => $lotCurrent, 'lot_extra' => $lotExtraData, 'lot_time_remaining' => $lot_time_remaining, 'bets' => $bets, 'class' => $form->formClasses, 'message' => $form->formMessages]); ?>
+<?=includeTemplate('templates/lot_main.php', ['categories' => $categories, 'lot' => $lotCurrent, 'lot_extra' => $form->extraData, 'lot_time_remaining' => $lot_time_remaining, 'bets' => $bets, 'class' => $form->formClasses, 'message' => $form->formMessages]); ?>
 
 <?=includeTemplate('templates/footer.php', ['categories' => $categories]); ?>
 

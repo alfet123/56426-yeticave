@@ -33,7 +33,7 @@
                             Мин. ставка <span><?=$lot_extra['min-bet'];?> р</span>
                         </div>
                     </div>
-                    <form class="lot-item__form" action="lot.php?id=<?=$lot->id;?>" method="post">
+                    <form class="lot-item__form <?=$class['form'];?>" action="lot.php?id=<?=$lot->id;?>" method="post">
                         <div class="lot-item__form-item <?=$class['cost'];?>">
                             <label for="cost">Ваша ставка</label>
                             <input id="cost" type="text" name="cost" placeholder="<?=$lot_extra['min-bet'];?>"> <!-- number required placeholder="12 000" -->
