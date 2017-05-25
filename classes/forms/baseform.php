@@ -18,12 +18,7 @@ abstract class BaseForm {
     /**
      * Сообщения об ошибке
      */
-    public $formMessages = [];
-
-    /**
-     * Сообщения о пустых значениях
-     */
-    public $emptyMessages = [];
+    public $errorMessages = [];
 
     /**
      * Конструктор
@@ -38,11 +33,11 @@ abstract class BaseForm {
      */
     public function checkEmpty()
     {
-        foreach ($this->emptyMessages as $key => $value) {
-            if (empty($_POST[$key])) {
-                $this->setFormError($key, $value);
-            } else {
-                $this->formData[$key] = $_POST[$key];
+        $messages = $this->emptyMessages();
+        foreach ($this->fieldNames() as $key) {
+            $this->formData[$key] = $_POST[$key];
+            if (empty($this->formData[$key]) && isset($messages[$key])) {
+                $this->setFormError($key, $messages[$key]);
             }
         }
     }
@@ -52,22 +47,37 @@ abstract class BaseForm {
      */
     protected function init()
     {
-        $this->formClasses['form'] = '';
-        foreach ($this->formData as $key => $value) {
+        foreach ($this->fieldNames() as $key) {
+            $this->formData[$key] = '';
             $this->formClasses[$key] = '';
-            $this->formMessages[$key] = '';
+            $this->errorMessages[$key] = '';
         }
+        $this->formClasses['form'] = '';
     }
 
     /**
      * Установка класса и сообщения при ошибке на форме
+     * @param string $field Название поля
+     * @param string $message Текст сообщения
      */
     protected function setFormError($field, $message)
     {
         $this->formClasses['form'] = 'form--invalid';
         $this->formClasses[$field] = 'form__item--invalid';
-        $this->formMessages[$field] = $message;
+        $this->errorMessages[$field] = $message;
     }
+
+    /**
+     * Возвращает названия полей формы
+     * @return array Список полей формы
+     */
+    abstract protected function fieldNames();
+
+    /**
+     * Возвращает сообщения о пустых значениях
+     * @return array Список сообщений
+     */
+    abstract protected function emptyMessages();
 
 }
 

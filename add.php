@@ -27,7 +27,7 @@ if (isset($_POST['send'])) {
 
 $templates = [
     'header' => ['avatar' => Auth::getAvatar()],
-    'add_main' => ['categories' => $categories, 'data' => $form->formData, 'class' => $form->formClasses, 'message' => $form->formMessages],
+    'add_main' => ['categories' => $categories, 'data' => $form->formData, 'class' => $form->formClasses, 'message' => $form->errorMessages],
     'footer' => ['categories' => $categories]
 ];
 

@@ -4,7 +4,7 @@
 date_default_timezone_set('Europe/Moscow');
 
 // значения для подключения к базе данных
-$dbConfig = [
+$DBCONFIG = [
     'host' => 'localhost',
     'user' => 'yeticave',
     'pass' => 'yeticave',

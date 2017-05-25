@@ -6,20 +6,6 @@
 class LotForm extends BaseForm {
 
     /**
-     * Данные из формы
-     */
-    public $formData = [
-        'cost' => ''
-    ];
-
-    /**
-     * Сообщения о пустых значениях
-     */
-    public $emptyMessages = [
-        'cost' => 'Введите ставку'
-    ];
-
-    /**
      * Дополнительные данные
      */
     public $extraData = [
@@ -38,6 +24,8 @@ class LotForm extends BaseForm {
 
     /**
      * Инициализация дополнительных данных
+     * @param object $lot Текущий лот
+     * @param array $bets Список ставок
      */
     public function initExtraData($lot, $bets)
     {
@@ -70,6 +58,7 @@ class LotForm extends BaseForm {
 
     /**
      * Сохранение новой ставки
+     * @param int Идентификатор лота
      */
     public function saveNewBet($lotId)
     {
@@ -87,6 +76,26 @@ class LotForm extends BaseForm {
             header("Location: mylots.php");
             exit;
         }
+    }
+
+    /**
+     * Возвращает названия полей формы
+     * @return array Список полей формы
+     */
+    protected function fieldNames()
+    {
+        return ['cost'];
+    }
+
+    /**
+     * Возвращает сообщения о пустых значениях
+     * @return array Список сообщений
+     */
+    protected function emptyMessages()
+    {
+        return [
+            'cost' => 'Введите ставку'
+        ];
     }
 
 }

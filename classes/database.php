@@ -20,15 +20,9 @@ class DataBase {
      */
     private function __construct()
     {
-        // не очень гуд. Потом надо вынести в какой-нить dbconfig.php
-        $config = [
-            'host' => 'localhost',
-            'user' => 'yeticave',
-            'pass' => 'yeticave',
-            'name' => 'yeticave'
-        ];
+        global $DBCONFIG;
 
-        $this->link = mysqli_connect($config['host'], $config['user'], $config['pass'], $config['name']);
+        $this->link = mysqli_connect($DBCONFIG['host'], $DBCONFIG['user'], $DBCONFIG['pass'], $DBCONFIG['name']);
 
         if ($this->link) {
             mysqli_query($this->link, "SET NAMES 'utf8'");

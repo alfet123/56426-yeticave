@@ -6,30 +6,6 @@
 class AddForm extends BaseForm {
 
     /**
-     * Данные из формы
-     */
-    public $formData = [
-        'name' => '',
-        'category' => '',
-        'description' => '',
-        'price' => '',
-        'step' => '',
-        'date_expire' => ''
-    ];
-
-    /**
-     * Сообщения о пустых значениях
-     */
-    public $emptyMessages = [
-        'name' => 'Введите название лота',
-        'category' => 'Выберите категорию',
-        'description' => 'Введите описание лота',
-        'price' => 'Введите начальную стоимость',
-        'step' => 'Введите шаг ставки',
-        'date_expire' => 'Введите дату окончания'
-    ];
-
-    /**
      * Расположение загруженного файла
      */
     public $target;
@@ -101,6 +77,31 @@ class AddForm extends BaseForm {
             header("Location: lot.php?id=".$newLot->id);
             exit;
         }
+    }
+
+    /**
+     * Возвращает названия полей формы
+     * @return array Список полей формы
+     */
+    protected function fieldNames()
+    {
+        return ['name', 'category', 'description', 'price', 'step', 'date_expire'];
+    }
+
+    /**
+     * Возвращает сообщения о пустых значениях
+     * @return array Список сообщений
+     */
+    protected function emptyMessages()
+    {
+        return [
+            'name' => 'Введите название лота',
+            'category' => 'Выберите категорию',
+            'description' => 'Введите описание лота',
+            'price' => 'Введите начальную стоимость',
+            'step' => 'Введите шаг ставки',
+            'date_expire' => 'Введите дату окончания'
+        ];
     }
 
 }

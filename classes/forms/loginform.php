@@ -6,22 +6,6 @@
 class LoginForm extends BaseForm {
 
     /**
-     * Данные из формы
-     */
-    public $formData = [
-        'email' => '',
-        'password' => ''
-    ];
-
-    /**
-     * Сообщения о пустых значениях
-     */
-    public $emptyMessages = [
-        'email' => 'Введите e-mail',
-        'password' => 'Введите пароль'
-    ];
-
-    /**
      * Сообщения о неверных значениях
      */
     public $errorAuthMessages = [
@@ -56,6 +40,27 @@ class LoginForm extends BaseForm {
             $this->setFormError($user['field'], $this->errorAuthMessages[$user['field']]);
 
         }
+    }
+
+    /**
+     * Возвращает названия полей формы
+     * @return array Список полей формы
+     */
+    protected function fieldNames()
+    {
+        return ['email', 'password'];
+    }
+
+    /**
+     * Возвращает сообщения о пустых значениях
+     * @return array Список сообщений
+     */
+    protected function emptyMessages()
+    {
+        return [
+            'email' => 'Введите e-mail',
+            'password' => 'Введите пароль'
+        ];
     }
 
 }

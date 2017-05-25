@@ -1,7 +1,5 @@
 <?php
 
-require_once 'config.php';
-
 // функция вычисляет оставшееся время до начала следующих суток
 function timeRemaining()
 {

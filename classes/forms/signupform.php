@@ -6,26 +6,6 @@
 class SignupForm extends BaseForm {
 
     /**
-     * Данные из формы
-     */
-    public $formData = [
-        'email' => '',
-        'password' => '',
-        'name' => '',
-        'contacts' => ''
-    ];
-
-    /**
-     * Сообщения о пустых значениях
-     */
-    public $emptyMessages = [
-        'email' => 'Введите e-mail',
-        'password' => 'Введите пароль',
-        'name' => 'Введите ваше имя',
-        'contacts' => 'Введите контактные данные'
-    ];
-
-    /**
      * Признак корректно загруженного файла
      */
     public $fileMoved;
@@ -96,6 +76,29 @@ class SignupForm extends BaseForm {
             header("Location: index.php");
             exit;
         }
+    }
+
+    /**
+     * Возвращает названия полей формы
+     * @return array Список полей формы
+     */
+    protected function fieldNames()
+    {
+        return ['email', 'password', 'name', 'contacts'];
+    }
+
+    /**
+     * Возвращает сообщения о пустых значениях
+     * @return array Список сообщений
+     */
+    protected function emptyMessages()
+    {
+        return [
+            'email' => 'Введите e-mail',
+            'password' => 'Введите пароль',
+            'name' => 'Введите ваше имя',
+            'contacts' => 'Введите контактные данные'
+        ];
     }
 
 }
