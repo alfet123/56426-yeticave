@@ -1,7 +1,10 @@
 <?php
 
-// подключение файла с данными
-require_once 'data.php';
+// функция вычисляет оставшееся время до начала следующих суток
+function timeRemaining()
+{
+    return gmdate("H:i", strtotime('tomorrow midnight') - time());
+}
 
 // функция обеспечивает защиту от XSS
 function dataFiltering($data)
@@ -38,6 +41,16 @@ function includeTemplate($file, $data)
     return $result;
 }
 
+// функция отображает документ
+function renderDocument($title, $templates)
+{
+    echo(includeTemplate('templates/html_begin.php', ['title' => $title]));
+    foreach ($templates as $name => $data) {
+        echo(includeTemplate('templates/'.$name.'.php', $data));
+    }
+    echo(includeTemplate('templates/html_end.php', []));
+}
+
 // функция выводит время в относительном формате
 function timeInRelativeFormat($ts)
 {
@@ -51,14 +64,6 @@ function timeInRelativeFormat($ts)
         $result = (int) $minutes." минут назад";
     }
     return $result;
-}
-
-// функция установки класса и сообщения при ошибке на форме
-function setFormError(&$formClasses, &$formMessages, $field, $message)
-{
-    $formClasses['form'] = 'form--invalid';
-    $formClasses[$field] = 'form__item--invalid';
-    $formMessages[$field] = $message;
 }
 
 // функция определения максимальной ставки

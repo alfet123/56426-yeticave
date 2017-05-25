@@ -23,66 +23,27 @@ if (!$lotCurrent) {
 
 $bets = BetFinder::getBetsByLot($lotCurrent->id);
 
-$lotExtraData['curr-bet'] = (count($bets)) ? getMaxBet($bets) : $lotCurrent->price;
-$lotExtraData['min-bet'] = $lotExtraData['curr-bet'] + ((count($bets)) ? $lotCurrent->step : 0);
+$form = new LotForm();
 
-// по умолчанию разрешается делать ставку
-$lotExtraData['no-bet'] = true;
+$form->initExtraData($lotCurrent, $bets);
 
-// если открыт сеанс и есть ставки, проверка кто сделал последнюю ставку
-if (isset($_SESSION['user']) && count($bets)) {
-    if (($_SESSION['user']['id'] == $bets[0]->id)) {
-        $lotExtraData['no-bet'] = false;
-    }
+// проверка, что была отправка формы
+if (isset($_POST['send'])) {
+
+    $form->checkEmpty();
+
+    $form->checkBetValue();
+
+    $form->saveNewBet($lotCurrent->id);
+
 }
 
-$lotExtraData['class'] = '';
-$lotExtraData['message'] = '';
+$templates = [
+    'header' => ['avatar' => Auth::getAvatar()],
+    'lot_main' => ['categories' => $categories, 'lot' => $lotCurrent, 'lot_extra' => $form->extraData, 'lot_time_remaining' => timeRemaining(), 'bets' => $bets, 'class' => $form->formClasses, 'message' => $form->errorMessages],
+    'footer' => ['categories' => $categories]
+];
 
-if (isset($_POST['cost'])) {
-
-    if (empty($_POST['cost'])) {
-        $lotExtraData['class'] = 'form__item--invalid';
-        $lotExtraData['message'] = 'Заполните это поле';
-    } elseif (!is_numeric($_POST['cost'])) {
-        $lotExtraData['class'] = 'form__item--invalid';
-        $lotExtraData['message'] = 'Введите числовое значение';
-    } elseif ($_POST['cost'] < $lotExtraData['min-bet']) {
-        $lotExtraData['class'] = 'form__item--invalid';
-        $lotExtraData['message'] = 'Минимальная ставка '.$lotExtraData['min-bet'];
-    } else {
-        // Добавление ставки
-        $newBet = new BetRecord();
-
-        $newBet->date = date("Y-m-d H:i:s");
-        $newBet->price = htmlspecialchars($_POST['cost']);
-        $newBet->user = $_SESSION['user']['id'];
-        $newBet->lot = $lotCurrent->id;
-
-        $newBet->insert();
-
-        header("Location: mylots.php");
-        exit;
-    }
-}
+renderDocument($lotCurrent->name, $templates);
 
 ?>
-
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title><?=$lotCurrent->name;?></title>
-    <link href="css/normalize.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
-</head>
-<body>
-
-<?=includeTemplate('templates/header.php', ['avatar' => Auth::getAvatar()]); ?>
-
-<?=includeTemplate('templates/lot_main.php', ['categories' => $categories, 'lot' => $lotCurrent, 'lot_extra' => $lotExtraData, 'lot_time_remaining' => $lot_time_remaining, 'bets' => $bets]); ?>
-
-<?=includeTemplate('templates/footer.php', ['categories' => $categories]); ?>
-
-</body>
-</html>

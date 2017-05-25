@@ -39,6 +39,22 @@ class LotFinder extends BaseFinder {
         return null;
     }
 
+    /**
+     * Получает список лотов по категории
+     * @param int $catId Идентификатор категории
+     * @return array Список лотов
+     */
+    public static function getLotsByCategory($catId)
+    {
+        $sql  = 'select lot.*, category.name as category ';
+        $sql .= 'from lot ';
+        $sql .= 'join category on lot.category = category.id ';
+        $sql .= 'where lot.category = ? ';
+        $sql .= 'order by date_create desc';
+
+        return parent::select($sql, 'LotRecord', [$catId]);
+    }
+
 }
 
 ?>

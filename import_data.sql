@@ -2,12 +2,12 @@ use yeticave;
 
 /* Категории */
 
-insert into `category` set `name` = 'Доски и лыжи';
-insert into `category` set `name` = 'Крепления';
-insert into `category` set `name` = 'Ботинки';
-insert into `category` set `name` = 'Одежда';
-insert into `category` set `name` = 'Инструменты';
-insert into `category` set `name` = 'Разное';
+insert into `category` set `name` = 'Доски и лыжи', `image` = 'img/category-1.jpg';
+insert into `category` set `name` = 'Крепления', `image` = 'img/category-2.jpg';
+insert into `category` set `name` = 'Ботинки', `image` = 'img/category-3.jpg';
+insert into `category` set `name` = 'Одежда', `image` = 'img/category-4.jpg';
+insert into `category` set `name` = 'Инструменты', `image` = 'img/category-5.jpg';
+insert into `category` set `name` = 'Разное', `image` = 'img/category-6.jpg';
 
 /* Пользователи */
 

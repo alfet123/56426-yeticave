@@ -4,7 +4,8 @@ use yeticave;
 
 create table `category` (
   `id` int unsigned not null auto_increment primary key,
-  `name` char(32) not null
+  `name` char(32) not null,
+  `image` char(255) not null
 );
 
 create table `lot` (

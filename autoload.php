@@ -1,5 +1,6 @@
 <?php
 
+require_once 'config.php';
 require_once 'functions.php';
 
 $classes = [
@@ -14,7 +15,12 @@ $classes = [
     'UserFinder' => 'classes/finders/userfinder.php',
     'CategoryFinder' => 'classes/finders/categoryfinder.php',
     'LotFinder' => 'classes/finders/lotfinder.php',
-    'BetFinder' => 'classes/finders/betfinder.php'
+    'BetFinder' => 'classes/finders/betfinder.php',
+    'BaseForm' => 'classes/forms/baseform.php',
+    'AddForm' => 'classes/forms/addform.php',
+    'LoginForm' => 'classes/forms/loginform.php',
+    'LotForm' => 'classes/forms/lotform.php',
+    'SignupForm' => 'classes/forms/signupform.php'
 ];
 
 spl_autoload_register(function ($class) {
