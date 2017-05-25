@@ -3,24 +3,11 @@
         <h2 class="promo__title">Нужен стафф для катки?</h2>
         <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и горнолыжное снаряжение.</p>
         <ul class="promo__list">
-            <li class="promo__item promo__item--boards">
-                <a class="promo__link" href="index.php?category=1">Доски и лыжи</a>
+            <?php foreach ($categories as $key => $value): ?>
+            <li class="promo__item promo__item--<?=$value->style;?>">
+                <a class="promo__link" href="index.php?category=<?=$value->id;?>"><?=$value->name;?></a>
             </li>
-            <li class="promo__item promo__item--attachment">
-                <a class="promo__link" href="index.php?category=2">Крепления</a>
-            </li>
-            <li class="promo__item promo__item--boots">
-                <a class="promo__link" href="index.php?category=3">Ботинки</a>
-            </li>
-            <li class="promo__item promo__item--clothing">
-                <a class="promo__link" href="index.php?category=4">Одежда</a>
-            </li>
-            <li class="promo__item promo__item--tools">
-                <a class="promo__link" href="index.php?category=5">Инструменты</a>
-            </li>
-            <li class="promo__item promo__item--other">
-                <a class="promo__link" href="index.php?category=6">Разное</a>
-            </li>
+            <?php endforeach; ?>
         </ul>
     </section>
     <section class="lots">

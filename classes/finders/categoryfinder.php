@@ -7,7 +7,7 @@ class CategoryFinder extends BaseFinder {
 
     public static function getAll()
     {
-        $sql  = 'select id, name ';
+        $sql  = 'select id, name, style ';
         $sql .= 'from category ';
         $sql .= 'order by id';
 
