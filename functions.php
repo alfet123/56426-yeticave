@@ -1,7 +1,12 @@
 <?php
 
-// подключение файла с данными
-require_once 'data.php';
+require_once 'config.php';
+
+// функция вычисляет оставшееся время до начала следующих суток
+function timeRemaining()
+{
+    return gmdate("H:i", strtotime('tomorrow midnight') - time());
+}
 
 // функция обеспечивает защиту от XSS
 function dataFiltering($data)
@@ -36,6 +41,16 @@ function includeTemplate($file, $data)
     }
 
     return $result;
+}
+
+// функция отображает документ
+function renderDocument($title, $templates)
+{
+    echo(includeTemplate('templates/html_begin.php', ['title' => $title]));
+    foreach ($templates as $name => $data) {
+        echo(includeTemplate('templates/'.$name.'.php', $data));
+    }
+    echo(includeTemplate('templates/html_end.php', []));
 }
 
 // функция выводит время в относительном формате

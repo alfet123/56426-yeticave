@@ -38,23 +38,12 @@ if (isset($_POST['send'])) {
 
 }
 
+$templates = [
+    'header' => ['avatar' => Auth::getAvatar()],
+    'lot_main' => ['categories' => $categories, 'lot' => $lotCurrent, 'lot_extra' => $form->extraData, 'lot_time_remaining' => timeRemaining(), 'bets' => $bets, 'class' => $form->formClasses, 'message' => $form->formMessages],
+    'footer' => ['categories' => $categories]
+];
+
+renderDocument($lotCurrent->name, $templates);
+
 ?>
-
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title><?=$lotCurrent->name;?></title>
-    <link href="css/normalize.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
-</head>
-<body>
-
-<?=includeTemplate('templates/header.php', ['avatar' => Auth::getAvatar()]); ?>
-
-<?=includeTemplate('templates/lot_main.php', ['categories' => $categories, 'lot' => $lotCurrent, 'lot_extra' => $form->extraData, 'lot_time_remaining' => $lot_time_remaining, 'bets' => $bets, 'class' => $form->formClasses, 'message' => $form->formMessages]); ?>
-
-<?=includeTemplate('templates/footer.php', ['categories' => $categories]); ?>
-
-</body>
-</html>

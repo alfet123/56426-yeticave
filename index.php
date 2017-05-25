@@ -4,24 +4,15 @@ session_start();
 require_once 'autoload.php';
 
 $categories = CategoryFinder::getAll();
+
 $lots = LotFinder::getLots();
 
+$templates = [
+    'header' => ['avatar' => Auth::getAvatar()],
+    'main' => ['categories' => $categories, 'lots' => $lots, 'lot_time_remaining' => timeRemaining()],
+    'footer' => ['categories' => $categories]
+];
+
+renderDocument('Главная', $templates);
+
 ?>
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Главная</title>
-    <link href="css/normalize.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
-</head>
-<body>
-
-<?=includeTemplate('templates/header.php', ['avatar' => Auth::getAvatar()]); ?>
-
-<?=includeTemplate('templates/main.php', ['categories' => $categories, 'lots' => $lots, 'lot_time_remaining' => $lot_time_remaining]); ?>
-
-<?=includeTemplate('templates/footer.php', ['categories' => $categories]); ?>
-
-</body>
-</html>

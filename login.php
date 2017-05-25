@@ -16,23 +16,12 @@ if (isset($_POST['send'])) {
 
 }
 
+$templates = [
+    'header' => ['avatar' => Auth::getAvatar()],
+    'login_main' => ['categories' => $categories, 'data' => $form->formData, 'class' => $form->formClasses, 'message' => $form->formMessages],
+    'footer' => ['categories' => $categories]
+];
+
+renderDocument('Вход', $templates);
+
 ?>
-
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Вход</title>
-    <link href="css/normalize.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
-</head>
-<body>
-
-<?=includeTemplate('templates/header.php', ['avatar' => Auth::getAvatar()]); ?>
-
-<?=includeTemplate('templates/login_main.php', ['categories' => $categories, 'data' => $form->formData, 'class' => $form->formClasses, 'message' => $form->formMessages]); ?>
-
-<?=includeTemplate('templates/footer.php', ['categories' => $categories]); ?>
-
-</body>
-</html>
