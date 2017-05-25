@@ -4,8 +4,8 @@
         <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и горнолыжное снаряжение.</p>
         <ul class="promo__list">
             <?php foreach ($categories as $key => $value): ?>
-            <li class="promo__item promo__item--<?=$value->style;?>">
-                <a class="promo__link" href="index.php?category=<?=$value->id;?>"><?=$value->name;?></a>
+            <li class="promo__item">
+                <a class="promo__link" style="background-image: url('<?=$value->image;?>')" href="index.php?category=<?=$value->id;?>"><?=$value->name;?></a>
             </li>
             <?php endforeach; ?>
         </ul>
