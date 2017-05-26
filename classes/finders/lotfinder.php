@@ -58,6 +58,22 @@ class LotFinder extends BaseFinder {
         return parent::select($sql, 'LotRecord', [$catId]);
     }
 
+    /**
+     * Получает список лотов по поисковой строке
+     * @param string $searchString Поисковая строка
+     * @return array Список лотов
+     */
+    public static function getLotsBySearchString($searchString)
+    {
+        $sql  = 'select lot.*, category.name as category ';
+        $sql .= 'from lot ';
+        $sql .= 'join category on lot.category = category.id ';
+        $sql .= 'where lot.name like ? or lot.description like ? ';
+        $sql .= 'order by date_create desc';
+
+        return parent::select($sql, 'LotRecord', ['%'.$searchString.'%', '%'.$searchString.'%']);
+    }
+
 }
 
 ?>

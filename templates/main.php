@@ -12,7 +12,7 @@
     </section>
     <section class="lots">
         <div class="lots__header">
-            <h2>Открытые лоты <?=$cat_name;?></h2>
+            <h2>Открытые лоты<?=$title_addon;?></h2>
             <select class="lots__select">
                 <option>Все категории</option>
                 <?php foreach ($categories as $key => $value): ?>
