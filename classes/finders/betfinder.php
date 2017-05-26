@@ -1,4 +1,7 @@
 <?php
+namespace YetiCave\finders;
+
+use YetiCave\finders\basefinder;
 
 /**
  * Class BetFinder

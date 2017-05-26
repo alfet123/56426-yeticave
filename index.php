@@ -1,7 +1,11 @@
 <?php
+use YetiCave\auth;
+use YetiCave\finders\lotfinder;
+use YetiCave\finders\categoryfinder;
+
 session_start();
 
-require_once 'autoload.php';
+require_once 'vendor/autoload.php';
 
 $categories = CategoryFinder::getAll();
 

@@ -1,4 +1,5 @@
 <?php
+namespace YetiCave;
 
 /**
  * Class DataBase синглтон, т.е. его нельзя напрямую создать, а можно лишь обращаться через DataBase::instance()

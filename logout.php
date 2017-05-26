@@ -1,7 +1,9 @@
 <?php
+use YetiCave\auth;
+
 session_start();
 
-require_once 'autoload.php';
+require_once 'vendor/autoload.php';
 
 Auth::logout();
 

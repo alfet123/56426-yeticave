@@ -1,4 +1,5 @@
 <?php
+namespace YetiCave\forms;
 
 /**
  * Class BaseForm

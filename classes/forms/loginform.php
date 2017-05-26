@@ -1,4 +1,8 @@
 <?php
+namespace YetiCave\forms;
+
+use YetiCave\forms\baseform;
+use YetiCave\auth;
 
 /**
  * Class LoginForm
