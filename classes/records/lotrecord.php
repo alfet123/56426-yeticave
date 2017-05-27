@@ -1,4 +1,7 @@
 <?php
+namespace YetiCave\records;
+
+use YetiCave\records\baserecord;
 
 /**
  * Class LotRecord

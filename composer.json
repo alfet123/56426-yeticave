@@ -1,6 +1,16 @@
 {
-    "name": "yeticave",
-    "description": "Личный проект «YetiCave» от HTML Academy",
-    "type": "project",
+    "name": "alex/yeticave",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Alexey Fetisov",
+            "email": "alfet123@gmail.com"
+        }
+    ],
+    "autoload" : {
+        "psr-4" : {
+            "YetiCave\\" : "classes/"
+        }
+    },
     "require": {}
 }

@@ -1,4 +1,9 @@
 <?php
+namespace YetiCave\forms;
+
+use YetiCave\forms\baseform;
+use YetiCave\finders\userfinder;
+use YetiCave\records\userrecord;
 
 /**
  * Class SignupForm

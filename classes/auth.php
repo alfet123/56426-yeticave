@@ -1,4 +1,7 @@
 <?php
+namespace YetiCave;
+
+use YetiCave\finders\userfinder;
 
 /**
  * Class Auth

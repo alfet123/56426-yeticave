@@ -1,4 +1,6 @@
 <?php
+use YetiCave\auth;
+
 session_start();
 
 require_once 'autoload.php';

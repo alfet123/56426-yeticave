@@ -1,4 +1,8 @@
 <?php
+use YetiCave\auth;
+use YetiCave\finders\betfinder;
+use YetiCave\finders\categoryfinder;
+
 session_start();
 
 require_once 'autoload.php';

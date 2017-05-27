@@ -1,4 +1,7 @@
 <?php
+namespace YetiCave\records;
+
+use YetiCave\database;
 
 /**
  * Class BaseRecord

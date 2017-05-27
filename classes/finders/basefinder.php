@@ -1,4 +1,11 @@
 <?php
+namespace YetiCave\finders;
+
+use YetiCave\database;
+use YetiCave\records\lotrecord;
+use YetiCave\records\betrecord;
+use YetiCave\records\userrecord;
+use YetiCave\records\categoryrecord;
 
 /**
  * Class BaseFinder
@@ -19,7 +26,24 @@ class BaseFinder {
         $data = DataBase::instance()->getData($sql, $param);
 
         foreach ($data as $key => $record) {
-            $row = new $className();
+
+            switch ($className) {
+                case 'LotRecord':
+                    $row = new LotRecord();
+                    break;
+                case 'BetRecord':
+                    $row = new BetRecord();
+                    break;
+                case 'UserRecord':
+                    $row = new UserRecord();
+                    break;
+                case 'CategoryRecord':
+                    $row = new CategoryRecord();
+                    break;
+                default:
+                    break;
+            }
+
             foreach ($record as $prop => $value) {
                 $row->$prop = $value;
             }

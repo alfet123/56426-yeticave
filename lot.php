@@ -1,4 +1,10 @@
 <?php
+use YetiCave\auth;
+use YetiCave\forms\lotform;
+use YetiCave\finders\lotfinder;
+use YetiCave\finders\betfinder;
+use YetiCave\finders\categoryfinder;
+
 session_start();
 
 require_once 'autoload.php';
