@@ -27,10 +27,6 @@ class BaseFinder {
 
         foreach ($data as $key => $record) {
 
-            // Раньше без Composer`а работало так
-            // $row = new $className();
-
-            // А теперь с Composer`ом только так
             switch ($className) {
                 case 'LotRecord':
                     $row = new LotRecord();
