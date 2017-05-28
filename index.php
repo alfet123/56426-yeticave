@@ -38,7 +38,7 @@ if ($category) {
 
 $templates = [
     'header' => ['avatar' => Auth::getAvatar()],
-    'main' => ['categories' => $categories, 'title_addon' => $titleAddon, 'lots' => $lots, 'lot_time_remaining' => timeRemaining()],
+    'main' => ['categories' => $categories, 'title_addon' => $titleAddon, 'lots' => $lots],
     'footer' => ['categories' => $categories]
 ];
 

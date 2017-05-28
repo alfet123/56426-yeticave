@@ -1,9 +1,14 @@
 <?php
 
-// функция вычисляет оставшееся время до начала следующих суток
-function timeRemaining()
+// функция вычисляет оставшееся время до указанного времени
+function timeRemaining($ts)
 {
-    return gmdate("H:i", strtotime('tomorrow midnight') - time());
+    $diff = $ts - time();
+    $days = intval($diff / 86400);
+    if ($days) {
+        return $days." day".(($days > 1) ? "s" : "");
+    }
+    return gmdate("H:i", $diff + 60);
 }
 
 // функция обеспечивает защиту от XSS
