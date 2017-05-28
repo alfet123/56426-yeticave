@@ -69,6 +69,23 @@ abstract class BaseForm {
     }
 
     /**
+     * Проверка, является ли файл изображением jpg или png
+     * @param string $filename Имя файла
+     * @return bool Признак соответствия типу
+     */
+    protected function isImage($fileName)
+    {
+        if (!$fileName) {
+            return false;
+        }
+        $fileType = mime_content_type($fileName);
+        if ($fileType == 'image/jpeg' or $fileType == 'image/png') {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Возвращает названия полей формы
      * @return array Список полей формы
      */

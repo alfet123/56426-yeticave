@@ -47,12 +47,14 @@ class SignupForm extends BaseForm {
      */
     public function saveAvatar()
     {
-        if (isset($_FILES['avatar'])) {
-            $file = $_FILES['avatar'];
-            $filename = $file['name'];
-            $source = $file['tmp_name'];
+        $file = $_FILES['avatar'];
+        $filename = $file['name'];
+        $source = $file['tmp_name'];
+        if (BaseForm::isImage($source)) {
             $this->target = "img/$filename";
             $this->fileMoved = move_uploaded_file($source, $this->target);
+        } else {
+            $this->fileMoved = false;
         }
     }
 

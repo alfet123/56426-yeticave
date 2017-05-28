@@ -41,16 +41,22 @@ class AddForm extends BaseForm {
      */
     public function saveLotImage()
     {
-        if (isset($_FILES['image'])) {
-            $file = $_FILES['image'];
-            $filename = $file['name'];
+        $file = $_FILES['image'];
+        $filename = $file['name'];
+        if (empty($filename)) {
+            $this->setFormError('image', 'Выберите файл для загрузки');
+        } else {
             $source = $file['tmp_name'];
-            $this->target = "img/$filename";
-            if (move_uploaded_file($source, $this->target)) {
-                $this->formData['image'] = $this->target;
-                $this->formClasses['image'] = 'form__item--uploaded';
+            if (BaseForm::isImage($source)) {
+                $this->target = "img/$filename";
+                if (move_uploaded_file($source, $this->target)) {
+                    $this->formData['image'] = $this->target;
+                    $this->formClasses['image'] = 'form__item--uploaded';
+                } else {
+                    $this->setFormError('image', 'Ошибка при загрузке файла');
+                }
             } else {
-                $this->setFormError('image', 'Выберите файл для загрузки');
+                $this->setFormError('image', 'Файл не является изображением');
             }
         }
     }
