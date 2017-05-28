@@ -37,7 +37,7 @@ abstract class BaseForm {
         $messages = $this->emptyMessages();
         foreach ($this->fieldNames() as $key) {
             $this->formData[$key] = $_POST[$key];
-            if (empty($this->formData[$key]) && isset($messages[$key])) {
+            if (!strlen($this->formData[$key]) && isset($messages[$key])) {
                 $this->setFormError($key, $messages[$key]);
             }
         }

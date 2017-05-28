@@ -15,6 +15,11 @@ class AddForm extends BaseForm {
     public $target;
 
     /**
+     * Список числовых полей, требующих проверки
+     */
+    public $numberFields = ['price', 'step'];
+
+    /**
      * Конструктор
      */
     public function __construct()
@@ -27,12 +32,14 @@ class AddForm extends BaseForm {
      */
     public function checkNumberFields()
     {
-        if (!empty($this->formData['price']) && !is_numeric($this->formData['price'])) {
-            $this->setFormError('price', 'Введите числовое значение');
-        }
-
-        if (!empty($this->formData['step']) && !is_numeric($this->formData['step'])) {
-            $this->setFormError('step', 'Введите числовое значение');
+        foreach ($this->numberFields as $field) {
+            if (strlen($this->formData[$field])) {
+                if (!is_numeric($this->formData[$field])) {
+                    $this->setFormError($field, 'Введите числовое значение');
+                } elseif ($this->formData[$field] <= 0) {
+                    $this->setFormError($field, 'Введите положительное число');
+                }
+            }
         }
     }
 
