@@ -44,6 +44,31 @@ class AddForm extends BaseForm {
     }
 
     /**
+     * Проверка корректности даты завершения
+     */
+    public function checkDateExpire()
+    {
+        if (strlen($this->formData['date_expire'])) {
+            $time = strtotime($this->formData['date_expire']);
+            if ($time) {
+                $date = date_parse($this->formData['date_expire']);
+                if (checkdate($date['month'], $date['day'], $date['year'])) {
+                    $now = getdate();
+                    $currentDate = strtotime($now['mday'].".".$now['month'].".".$now['year']);
+                    $expireDate = strtotime($date['day'].".".$date['month'].".". $date['year']);
+                    if (($expireDate-$currentDate)/86400 < 1) {
+                        $this->setFormError('date_expire', 'Укажите дату не раньше '.date('d.m.Y', strtotime('+1 day')));
+                    }
+                } else {
+                    $this->setFormError('date_expire', 'Недопустимое значение даты');
+                }
+            } else {
+                $this->setFormError('date_expire', 'Недопустимый формат даты');
+            }
+        }
+    }
+
+    /**
      * Сохранение загруженного изображения лота
      */
     public function saveLotImage()

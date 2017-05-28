@@ -61,7 +61,7 @@
             </div>
             <div class="form__item <?=$class['date_expire'];?>">
                 <label for="lot-date">Дата завершения</label>
-                <input class="form__input-date" id="lot-date" type="text" name="date_expire" value="<?=$data['date_expire'];?>" placeholder="20.05.2017"> <!-- required -->
+                <input class="form__input-date" id="lot-date" type="text" name="date_expire" value="<?=$data['date_expire'];?>" placeholder="<?=date('d.m.Y', strtotime('+1 day'));?>"> <!-- required -->
                 <span class="form__error"><?=$message['date_expire'];?></span>
             </div>
         </div>
