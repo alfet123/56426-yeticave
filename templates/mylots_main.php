@@ -23,7 +23,7 @@
                     <?=$value->category;?>
                 </td>
                 <td class="rates__timer">
-                    <div class="timer timer--finishing"><?=$lot_time_remaining;?></div>
+                    <div class="timer timer--finishing"><?=timeRemaining(strtotime($value->date_expire));?></div>
                 </td>
                 <td class="rates__price">
                     <?=$value->price;?>

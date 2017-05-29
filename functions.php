@@ -3,7 +3,11 @@
 // функция вычисляет оставшееся время до указанного времени
 function timeRemaining($ts)
 {
-    $diff = $ts - time();
+    $now = time();
+    if ($ts <= $now ) {
+        return "Expire";
+    }
+    $diff = $ts - $now;
     $days = intval($diff / 86400);
     if ($days) {
         return $days." day".(($days > 1) ? "s" : "");

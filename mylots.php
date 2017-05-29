@@ -18,7 +18,7 @@ $mybets = BetFinder::getBetsByUser($_SESSION['user']['id']);
 
 $templates = [
     'header' => ['avatar' => Auth::getAvatar()],
-    'mylots_main' => ['categories' => $categories, 'mybets' => $mybets, 'lot_time_remaining' => timeRemaining()],
+    'mylots_main' => ['categories' => $categories, 'mybets' => $mybets],
     'footer' => ['categories' => $categories]
 ];
 

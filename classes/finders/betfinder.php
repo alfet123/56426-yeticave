@@ -31,7 +31,7 @@ class BetFinder extends BaseFinder {
      */
     public static function getBetsByUser($userId)
     {
-        $sql  = 'select bet.*, max(bet.price) as price, lot.id, lot.image, lot.name as lot, category.name as category ';
+        $sql  = 'select bet.*, max(bet.price) as price, lot.id, lot.image, lot.name as lot, lot.date_expire, category.name as category ';
         $sql .= 'from lot ';
         $sql .= 'join category on lot.category = category.id ';
         $sql .= 'join bet on lot.id = bet.lot ';
