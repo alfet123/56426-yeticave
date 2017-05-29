@@ -53,6 +53,35 @@ class BaseFinder {
         return $result;
     }
 
+    /**
+     * Выполняет запрос для получения количества записей в таблице lot
+     * @param string $type Тип условия запроса
+     * @param string $data Параметр условия запроса
+     * @return int Количество записей
+     */
+    public static function getLotsCount($type = '', $data = '')
+    {
+        $sql = 'select count(*) as count from lot';
+
+        switch ($type) {
+            case 'category':
+                $sql .= ' where category = ?';
+                $param = [$data];
+                break;
+            case 'search':
+                $sql .= ' where name like ? or description like ?';
+                $param = ['%'.$data.'%', '%'.$data.'%'];
+                break;
+            default:
+                $param = [];
+                break;
+        }
+
+        $data = DataBase::instance()->getData($sql, $param);
+
+        return $data[0]['count'];
+    }
+
 }
 
 ?>

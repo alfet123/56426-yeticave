@@ -13,7 +13,7 @@ class LotFinder extends BaseFinder {
      * @param array $ids Список идентификаторов лотов
      * @return array Список лотов
      */
-    public static function getLots(array $ids = [])
+    public static function getLots(array $ids = [], $limit, $offset = 0)
     {
         $sql  = 'select lot.*, category.name as category ';
         $sql .= 'from lot ';
@@ -21,9 +21,10 @@ class LotFinder extends BaseFinder {
         if (!empty($ids)) {
             $sql .= 'where lot.id in ('.implode(',', array_fill(0, count($ids), '?')).') ';
         }
-        $sql .= 'order by date_create desc';
+        $sql .= 'order by date_create desc ';
+        $sql .= 'limit ? offset ?';
 
-        return parent::select($sql, 'LotRecord', $ids);
+        return parent::select($sql, 'LotRecord', array_merge($ids, [$limit, $offset]));
     }
 
     /**
@@ -33,7 +34,7 @@ class LotFinder extends BaseFinder {
      */
     public static function getLotById($lotId)
     {
-        $data = self::getLots([$lotId]);
+        $data = self::getLots([$lotId], 1);
 
         if (!empty($data)) {
             return $data[0];
@@ -47,15 +48,16 @@ class LotFinder extends BaseFinder {
      * @param int $catId Идентификатор категории
      * @return array Список лотов
      */
-    public static function getLotsByCategory($catId)
+    public static function getLotsByCategory($catId, $limit, $offset = 0)
     {
         $sql  = 'select lot.*, category.name as category ';
         $sql .= 'from lot ';
         $sql .= 'join category on lot.category = category.id ';
         $sql .= 'where lot.category = ? ';
-        $sql .= 'order by date_create desc';
+        $sql .= 'order by date_create desc ';
+        $sql .= 'limit ? offset ?';
 
-        return parent::select($sql, 'LotRecord', [$catId]);
+        return parent::select($sql, 'LotRecord', [$catId, $limit, $offset]);
     }
 
     /**
@@ -63,15 +65,16 @@ class LotFinder extends BaseFinder {
      * @param string $searchString Поисковая строка
      * @return array Список лотов
      */
-    public static function getLotsBySearchString($searchString)
+    public static function getLotsBySearchString($searchString, $limit, $offset = 0)
     {
         $sql  = 'select lot.*, category.name as category ';
         $sql .= 'from lot ';
         $sql .= 'join category on lot.category = category.id ';
         $sql .= 'where lot.name like ? or lot.description like ? ';
-        $sql .= 'order by date_create desc';
+        $sql .= 'order by date_create desc ';
+        $sql .= 'limit ? offset ?';
 
-        return parent::select($sql, 'LotRecord', ['%'.$searchString.'%', '%'.$searchString.'%']);
+        return parent::select($sql, 'LotRecord', ['%'.$searchString.'%', '%'.$searchString.'%', $limit, $offset]);
     }
 
 }

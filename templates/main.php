@@ -43,4 +43,13 @@
             <?php endforeach; ?>
         </ul>
     </section>
+    <?php if (isset($page)): ?>
+    <ul class="pagination-list">
+        <li class="pagination-item pagination-item-prev"><a<?=$page['prev'] ? ' href="?'.$page['param'].'page='.$page['prev'].'"' : '';?>>Назад</a></li>
+        <?php for ($i = 1; $i <= $page['count']; $i++): ?>
+            <li class="pagination-item<?=($page['current']==$i) ? ' pagination-item-active' : '';?>"><a<?=($page['current']!=$i) ? ' href="?'.$page['param'].'page='.$i.'"' : '';?>><?=$i;?></a></li>
+        <?php endfor; ?>
+        <li class="pagination-item pagination-item-next"><a<?=$page['next'] ? ' href="?'.$page['param'].'page='.$page['next'].'"' : '';?>>Вперед</a></li>
+    </ul>
+    <?php endif; ?>
 </main>

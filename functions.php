@@ -82,4 +82,20 @@ function getMaxBet($bets)
     return (count($betPrice)) ? max($betPrice) : 0;
 }
 
+// функция расчета параметров для пагинации
+function pagesParam($rowsCount)
+{
+    global $ROWS_LIMIT;
+
+    $pagesCount = ceil($rowsCount / $ROWS_LIMIT);
+    $currentPage = (isset($_GET['page']) && is_numeric($_GET['page']) && intval($_GET['page'])>0 && intval($_GET['page'])<=$pagesCount) ? intval($_GET['page']) : 1;
+    $offset = ($currentPage - 1) * $ROWS_LIMIT;
+
+    return [
+        'count' => $pagesCount,
+        'current' => $currentPage,
+        'offset' => $offset
+    ];
+}
+
 ?>
