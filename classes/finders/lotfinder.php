@@ -24,7 +24,7 @@ class LotFinder extends BaseFinder {
         $sql .= 'order by date_create desc ';
         $sql .= 'limit ? offset ?';
 
-        return parent::select($sql, 'LotRecord', array_merge($ids, [parent::getRowsLimit(), $offset]));
+        return parent::select($sql, 'LotRecord', array_merge($ids, [parent::ROWS_LIMIT, $offset]));
     }
 
     /**
@@ -57,7 +57,7 @@ class LotFinder extends BaseFinder {
         $sql .= 'order by date_create desc ';
         $sql .= 'limit ? offset ?';
 
-        return parent::select($sql, 'LotRecord', [$catId, parent::getRowsLimit(), $offset]);
+        return parent::select($sql, 'LotRecord', [$catId, parent::ROWS_LIMIT, $offset]);
     }
 
     /**
@@ -74,7 +74,7 @@ class LotFinder extends BaseFinder {
         $sql .= 'order by date_create desc ';
         $sql .= 'limit ? offset ?';
 
-        return parent::select($sql, 'LotRecord', ['%'.$searchString.'%', '%'.$searchString.'%', parent::getRowsLimit(), $offset]);
+        return parent::select($sql, 'LotRecord', ['%'.$searchString.'%', '%'.$searchString.'%', parent::ROWS_LIMIT, $offset]);
     }
 
     /**

@@ -86,9 +86,9 @@ function getMaxBet($bets)
 // функция расчета параметров для пагинации
 function pagesParam($rowsCount)
 {
-    $pagesCount = ceil($rowsCount / BaseFinder::getRowsLimit());
+    $pagesCount = ceil($rowsCount / BaseFinder::ROWS_LIMIT);
     $currentPage = (isset($_GET['page']) && is_numeric($_GET['page']) && intval($_GET['page'])>0 && intval($_GET['page'])<=$pagesCount) ? intval($_GET['page']) : 1;
-    $offset = ($currentPage - 1) * BaseFinder::getRowsLimit();
+    $offset = ($currentPage - 1) * BaseFinder::ROWS_LIMIT;
 
     return [
         'count' => $pagesCount,

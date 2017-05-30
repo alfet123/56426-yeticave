@@ -50,7 +50,7 @@ $mainData = [
     'lots' => $lots
 ];
 
-if ($lotsCount > BaseFinder::getRowsLimit()) {
+if ($lotsCount > BaseFinder::ROWS_LIMIT) {
     $page = [];
     $page['count'] = $pages['count'];
     $page['current'] = $pages['current'];
