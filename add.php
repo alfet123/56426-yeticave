@@ -23,6 +23,8 @@ if (isset($_POST['send'])) {
 
     $form->checkNumberFields();
 
+    $form->checkDateExpire();
+
     $form->saveLotImage();
 
     $form->saveNewLot();

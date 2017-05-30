@@ -1,11 +1,13 @@
 <?php
 use YetiCave\auth;
 use YetiCave\finders\lotfinder;
+use YetiCave\finders\basefinder;
 use YetiCave\finders\categoryfinder;
 
 session_start();
 
 require_once 'autoload.php';
+require_once 'winner.php';
 
 $categories = CategoryFinder::getAll();
 
@@ -26,19 +28,42 @@ if (isset($_GET['search']) && strlen(trim($_GET['search']))) {
 }
 
 if ($category) {
-    $lots = LotFinder::getLotsByCategory($category->id);
+    $lotsCount = BaseFinder::getLotsCount('category', $category->id);
+    $pages = pagesParam($lotsCount);
+    $lots = LotFinder::getLotsByCategory($category->id, $pages['offset']);
     $titleAddon = ' ( Категория: '.$category->name.' )';
 } elseif ($searchString) {
-    $lots = LotFinder::getLotsBySearchString($searchString);
+    $lotsCount = BaseFinder::getLotsCount('search', $searchString);
+    $pages = pagesParam($lotsCount);
+    $lots = LotFinder::getLotsBySearchString($searchString, $pages['offset']);
     $titleAddon = ' ( Поиск: '.$searchString.' )';
 } else {
-    $lots = LotFinder::getLots();
+    $lotsCount = BaseFinder::getLotsCount();
+    $pages = pagesParam($lotsCount);
+    $lots = LotFinder::getLots([], $pages['offset']);
     $titleAddon = '';
+}
+
+$mainData = [
+    'categories' => $categories,
+    'title_addon' => $titleAddon,
+    'lots' => $lots
+];
+
+if ($lotsCount > BaseFinder::ROWS_LIMIT) {
+    $page = [];
+    $page['count'] = $pages['count'];
+    $page['current'] = $pages['current'];
+    $page['prev'] = ($page['current'] > 1) ? $page['current'] - 1 : 0;
+    $page['next'] = ($page['current'] < $page['count']) ? $page['current'] + 1 : 0;
+    $page['param'] = $category ? 'category='.$category->id.'&' : ($searchString ? 'search='.$searchString.'&' : '');
+
+    $mainData['page'] = $page;
 }
 
 $templates = [
     'header' => ['avatar' => Auth::getAvatar()],
-    'main' => ['categories' => $categories, 'title_addon' => $titleAddon, 'lots' => $lots, 'lot_time_remaining' => timeRemaining()],
+    'main' => $mainData,
     'footer' => ['categories' => $categories]
 ];
 

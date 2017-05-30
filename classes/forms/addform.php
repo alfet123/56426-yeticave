@@ -15,11 +15,18 @@ class AddForm extends BaseForm {
     public $target;
 
     /**
+     * Список числовых полей, требующих проверки
+     */
+    public $numberFields = ['price', 'step'];
+
+    /**
      * Конструктор
      */
     public function __construct()
     {
         parent::__construct();
+        $this->formClasses['image'] = '';
+        $this->errorMessages['image'] = '';
     }
 
     /**
@@ -27,12 +34,39 @@ class AddForm extends BaseForm {
      */
     public function checkNumberFields()
     {
-        if (!empty($this->formData['price']) && !is_numeric($this->formData['price'])) {
-            $this->setFormError('price', 'Введите числовое значение');
+        foreach ($this->numberFields as $field) {
+            if (strlen($this->formData[$field])) {
+                if (!is_numeric($this->formData[$field])) {
+                    $this->setFormError($field, 'Введите числовое значение');
+                } elseif ($this->formData[$field] <= 0) {
+                    $this->setFormError($field, 'Введите положительное число');
+                }
+            }
         }
+    }
 
-        if (!empty($this->formData['step']) && !is_numeric($this->formData['step'])) {
-            $this->setFormError('step', 'Введите числовое значение');
+    /**
+     * Проверка корректности даты завершения
+     */
+    public function checkDateExpire()
+    {
+        if (strlen($this->formData['date_expire'])) {
+            $time = strtotime($this->formData['date_expire']);
+            if ($time) {
+                $date = date_parse($this->formData['date_expire']);
+                if (checkdate($date['month'], $date['day'], $date['year'])) {
+                    $now = getdate();
+                    $currentDate = strtotime($now['mday'].".".$now['month'].".".$now['year']);
+                    $expireDate = strtotime($date['day'].".".$date['month'].".". $date['year']);
+                    if (($expireDate-$currentDate)/86400 < 1) {
+                        $this->setFormError('date_expire', 'Укажите дату не раньше '.date('d.m.Y', strtotime('+1 day')));
+                    }
+                } else {
+                    $this->setFormError('date_expire', 'Недопустимое значение даты');
+                }
+            } else {
+                $this->setFormError('date_expire', 'Недопустимый формат даты');
+            }
         }
     }
 
@@ -41,16 +75,22 @@ class AddForm extends BaseForm {
      */
     public function saveLotImage()
     {
-        if (isset($_FILES['image'])) {
-            $file = $_FILES['image'];
-            $filename = $file['name'];
+        $file = $_FILES['image'];
+        $filename = $file['name'];
+        if (empty($filename)) {
+            $this->setFormError('image', $this->emptyMessages()['image']);
+        } else {
             $source = $file['tmp_name'];
-            $this->target = "img/$filename";
-            if (move_uploaded_file($source, $this->target)) {
-                $this->formData['image'] = $this->target;
-                $this->formClasses['image'] = 'form__item--uploaded';
+            if (BaseForm::isImage($source)) {
+                $this->target = "img/$filename";
+                if (move_uploaded_file($source, $this->target)) {
+                    $this->formData['image'] = $this->target;
+                    $this->formClasses['image'] = 'form__item--uploaded';
+                } else {
+                    $this->setFormError('image', 'Ошибка при загрузке файла');
+                }
             } else {
-                $this->setFormError('image', 'Выберите файл для загрузки');
+                $this->setFormError('image', 'Файл не является изображением');
             }
         }
     }
@@ -102,6 +142,7 @@ class AddForm extends BaseForm {
             'name' => 'Введите название лота',
             'category' => 'Выберите категорию',
             'description' => 'Введите описание лота',
+            'image' => 'Выберите файл для загрузки',
             'price' => 'Введите начальную стоимость',
             'step' => 'Введите шаг ставки',
             'date_expire' => 'Введите дату окончания'

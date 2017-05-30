@@ -1,9 +1,19 @@
 <?php
+use YetiCave\finders\basefinder;
 
-// функция вычисляет оставшееся время до начала следующих суток
-function timeRemaining()
+// функция вычисляет оставшееся время до указанного времени
+function timeRemaining($ts)
 {
-    return gmdate("H:i", strtotime('tomorrow midnight') - time());
+    $now = time();
+    if ($ts <= $now ) {
+        return "Expire";
+    }
+    $diff = $ts - $now;
+    $days = intval($diff / 86400);
+    if ($days) {
+        return $days." day".(($days > 1) ? "s" : "");
+    }
+    return gmdate("H:i", $diff + 60);
 }
 
 // функция обеспечивает защиту от XSS
@@ -71,6 +81,37 @@ function getMaxBet($bets)
 {
     $betPrice = array_map(function($b) { return $b->price; }, $bets);
     return (count($betPrice)) ? max($betPrice) : 0;
+}
+
+// функция расчета параметров для пагинации
+function pagesParam($rowsCount)
+{
+    $pagesCount = ceil($rowsCount / BaseFinder::ROWS_LIMIT);
+    $currentPage = (isset($_GET['page']) && is_numeric($_GET['page']) && intval($_GET['page'])>0 && intval($_GET['page'])<=$pagesCount) ? intval($_GET['page']) : 1;
+    $offset = ($currentPage - 1) * BaseFinder::ROWS_LIMIT;
+
+    return [
+        'count' => $pagesCount,
+        'current' => $currentPage,
+        'offset' => $offset
+    ];
+}
+
+// функция определения победителя
+function getWinner($bets)
+{
+    if (!count($bets)) {
+        return false;
+    }
+
+    $winner = $bets[0];
+    foreach ($bets as $bet) {
+        if ($bet->price > $winner->price) {
+            $winner = $bet;
+        }
+    }
+
+    return $winner;
 }
 
 ?>

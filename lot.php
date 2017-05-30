@@ -46,7 +46,7 @@ if (isset($_POST['send'])) {
 
 $templates = [
     'header' => ['avatar' => Auth::getAvatar()],
-    'lot_main' => ['categories' => $categories, 'lot' => $lotCurrent, 'lot_extra' => $form->extraData, 'lot_time_remaining' => timeRemaining(), 'bets' => $bets, 'class' => $form->formClasses, 'message' => $form->errorMessages],
+    'lot_main' => ['categories' => $categories, 'lot' => $lotCurrent, 'lot_extra' => $form->extraData, 'bets' => $bets, 'class' => $form->formClasses, 'message' => $form->errorMessages],
     'footer' => ['categories' => $categories]
 ];
 

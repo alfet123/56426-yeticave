@@ -34,8 +34,8 @@
                             <span class="lot__amount">Стартовая цена</span>
                             <span class="lot__cost"><?=$value->price;?><b class="rub">р</b></span>
                         </div>
-                        <div class="lot__timer timer">
-                            <?=$lot_time_remaining;?>
+                        <div class="lot__timer timer<?=(timeRemaining(strtotime($value->date_expire))) == 'Expire' ? ' timer--finishing' : '';?>">
+                            <?=timeRemaining(strtotime($value->date_expire));?>
                         </div>
                     </div>
                 </div>
@@ -43,4 +43,13 @@
             <?php endforeach; ?>
         </ul>
     </section>
+    <?php if (isset($page)): ?>
+    <ul class="pagination-list">
+        <li class="pagination-item pagination-item-prev"><a<?=$page['prev'] ? ' href="?'.$page['param'].'page='.$page['prev'].'"' : ' style="display: none"';?>>Назад</a></li>
+        <?php for ($i = 1; $i <= $page['count']; $i++): ?>
+            <li class="pagination-item<?=($page['current']==$i) ? ' pagination-item-active' : '';?>"><a<?=($page['current']!=$i) ? ' href="?'.$page['param'].'page='.$i.'"' : '';?>><?=$i;?></a></li>
+        <?php endfor; ?>
+        <li class="pagination-item pagination-item-next"><a<?=$page['next'] ? ' href="?'.$page['param'].'page='.$page['next'].'"' : ' style="display: none"';?>>Вперед</a></li>
+    </ul>
+    <?php endif; ?>
 </main>

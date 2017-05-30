@@ -37,7 +37,7 @@ abstract class BaseForm {
         $messages = $this->emptyMessages();
         foreach ($this->fieldNames() as $key) {
             $this->formData[$key] = $_POST[$key];
-            if (empty($this->formData[$key]) && isset($messages[$key])) {
+            if (!strlen($this->formData[$key]) && isset($messages[$key])) {
                 $this->setFormError($key, $messages[$key]);
             }
         }
@@ -66,6 +66,23 @@ abstract class BaseForm {
         $this->formClasses['form'] = 'form--invalid';
         $this->formClasses[$field] = 'form__item--invalid';
         $this->errorMessages[$field] = $message;
+    }
+
+    /**
+     * Проверка, является ли файл изображением jpg или png
+     * @param string $filename Имя файла
+     * @return bool Признак соответствия типу
+     */
+    protected function isImage($fileName)
+    {
+        if (!$fileName) {
+            return false;
+        }
+        $fileType = mime_content_type($fileName);
+        if ($fileType == 'image/jpeg' or $fileType == 'image/png') {
+            return true;
+        }
+        return false;
     }
 
     /**
