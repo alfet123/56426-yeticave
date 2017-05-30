@@ -13,6 +13,11 @@ use YetiCave\records\categoryrecord;
 class BaseFinder {
 
     /**
+     * Ограничения на количество записей в результате запроса
+     */
+    public static $ROWS_LIMIT = 9;
+
+    /**
      * Выполняет запрос для получения данных
      * @param string $sql SQL запрос с плейсхолдерами вместо значений
      * @param string $className Название класса
@@ -80,6 +85,15 @@ class BaseFinder {
         $data = DataBase::instance()->getData($sql, $param);
 
         return $data[0]['count'];
+    }
+
+    /**
+     * Возвращает значение свойства $ROWS_LIMIT
+     * @return int Значение свойства $ROWS_LIMIT
+     */
+    public static function getRowsLimit()
+    {
+        return self::$ROWS_LIMIT;
     }
 
 }

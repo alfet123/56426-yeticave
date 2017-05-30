@@ -25,6 +25,8 @@ class AddForm extends BaseForm {
     public function __construct()
     {
         parent::__construct();
+        $this->formClasses['image'] = '';
+        $this->errorMessages['image'] = '';
     }
 
     /**
@@ -76,7 +78,7 @@ class AddForm extends BaseForm {
         $file = $_FILES['image'];
         $filename = $file['name'];
         if (empty($filename)) {
-            $this->setFormError('image', 'Выберите файл для загрузки');
+            $this->setFormError('image', $this->emptyMessages()['image']);
         } else {
             $source = $file['tmp_name'];
             if (BaseForm::isImage($source)) {
@@ -140,6 +142,7 @@ class AddForm extends BaseForm {
             'name' => 'Введите название лота',
             'category' => 'Выберите категорию',
             'description' => 'Введите описание лота',
+            'image' => 'Выберите файл для загрузки',
             'price' => 'Введите начальную стоимость',
             'step' => 'Введите шаг ставки',
             'date_expire' => 'Введите дату окончания'

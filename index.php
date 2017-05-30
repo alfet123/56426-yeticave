@@ -30,17 +30,17 @@ if (isset($_GET['search']) && strlen(trim($_GET['search']))) {
 if ($category) {
     $lotsCount = BaseFinder::getLotsCount('category', $category->id);
     $pages = pagesParam($lotsCount);
-    $lots = LotFinder::getLotsByCategory($category->id, $ROWS_LIMIT, $pages['offset']);
+    $lots = LotFinder::getLotsByCategory($category->id, $pages['offset']);
     $titleAddon = ' ( Категория: '.$category->name.' )';
 } elseif ($searchString) {
     $lotsCount = BaseFinder::getLotsCount('search', $searchString);
     $pages = pagesParam($lotsCount);
-    $lots = LotFinder::getLotsBySearchString($searchString, $ROWS_LIMIT, $pages['offset']);
+    $lots = LotFinder::getLotsBySearchString($searchString, $pages['offset']);
     $titleAddon = ' ( Поиск: '.$searchString.' )';
 } else {
     $lotsCount = BaseFinder::getLotsCount();
     $pages = pagesParam($lotsCount);
-    $lots = LotFinder::getLots([], $ROWS_LIMIT, $pages['offset']);
+    $lots = LotFinder::getLots([], $pages['offset']);
     $titleAddon = '';
 }
 
@@ -50,7 +50,7 @@ $mainData = [
     'lots' => $lots
 ];
 
-if ($lotsCount > $ROWS_LIMIT) {
+if ($lotsCount > BaseFinder::getRowsLimit()) {
     $page = [];
     $page['count'] = $pages['count'];
     $page['current'] = $pages['current'];

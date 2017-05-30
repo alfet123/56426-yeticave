@@ -1,4 +1,5 @@
 <?php
+use YetiCave\finders\basefinder;
 
 // функция вычисляет оставшееся время до указанного времени
 function timeRemaining($ts)
@@ -85,11 +86,9 @@ function getMaxBet($bets)
 // функция расчета параметров для пагинации
 function pagesParam($rowsCount)
 {
-    global $ROWS_LIMIT;
-
-    $pagesCount = ceil($rowsCount / $ROWS_LIMIT);
+    $pagesCount = ceil($rowsCount / BaseFinder::getRowsLimit());
     $currentPage = (isset($_GET['page']) && is_numeric($_GET['page']) && intval($_GET['page'])>0 && intval($_GET['page'])<=$pagesCount) ? intval($_GET['page']) : 1;
-    $offset = ($currentPage - 1) * $ROWS_LIMIT;
+    $offset = ($currentPage - 1) * BaseFinder::getRowsLimit();
 
     return [
         'count' => $pagesCount,

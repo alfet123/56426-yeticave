@@ -13,7 +13,7 @@ class LotFinder extends BaseFinder {
      * @param array $ids Список идентификаторов лотов
      * @return array Список лотов
      */
-    public static function getLots(array $ids = [], $limit, $offset = 0)
+    public static function getLots(array $ids = [], $offset = 0)
     {
         $sql  = 'select lot.*, category.name as category ';
         $sql .= 'from lot ';
@@ -24,7 +24,7 @@ class LotFinder extends BaseFinder {
         $sql .= 'order by date_create desc ';
         $sql .= 'limit ? offset ?';
 
-        return parent::select($sql, 'LotRecord', array_merge($ids, [$limit, $offset]));
+        return parent::select($sql, 'LotRecord', array_merge($ids, [parent::getRowsLimit(), $offset]));
     }
 
     /**
@@ -34,7 +34,7 @@ class LotFinder extends BaseFinder {
      */
     public static function getLotById($lotId)
     {
-        $data = self::getLots([$lotId], 1);
+        $data = self::getLots([$lotId]);
 
         if (!empty($data)) {
             return $data[0];
@@ -48,7 +48,7 @@ class LotFinder extends BaseFinder {
      * @param int $catId Идентификатор категории
      * @return array Список лотов
      */
-    public static function getLotsByCategory($catId, $limit, $offset = 0)
+    public static function getLotsByCategory($catId, $offset = 0)
     {
         $sql  = 'select lot.*, category.name as category ';
         $sql .= 'from lot ';
@@ -57,7 +57,7 @@ class LotFinder extends BaseFinder {
         $sql .= 'order by date_create desc ';
         $sql .= 'limit ? offset ?';
 
-        return parent::select($sql, 'LotRecord', [$catId, $limit, $offset]);
+        return parent::select($sql, 'LotRecord', [$catId, parent::getRowsLimit(), $offset]);
     }
 
     /**
@@ -65,7 +65,7 @@ class LotFinder extends BaseFinder {
      * @param string $searchString Поисковая строка
      * @return array Список лотов
      */
-    public static function getLotsBySearchString($searchString, $limit, $offset = 0)
+    public static function getLotsBySearchString($searchString, $offset = 0)
     {
         $sql  = 'select lot.*, category.name as category ';
         $sql .= 'from lot ';
@@ -74,7 +74,7 @@ class LotFinder extends BaseFinder {
         $sql .= 'order by date_create desc ';
         $sql .= 'limit ? offset ?';
 
-        return parent::select($sql, 'LotRecord', ['%'.$searchString.'%', '%'.$searchString.'%', $limit, $offset]);
+        return parent::select($sql, 'LotRecord', ['%'.$searchString.'%', '%'.$searchString.'%', parent::getRowsLimit(), $offset]);
     }
 
     /**
