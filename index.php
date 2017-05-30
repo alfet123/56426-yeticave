@@ -7,6 +7,7 @@ use YetiCave\finders\categoryfinder;
 session_start();
 
 require_once 'autoload.php';
+require_once 'winner.php';
 
 $categories = CategoryFinder::getAll();
 

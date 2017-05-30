@@ -34,7 +34,7 @@
                             <span class="lot__amount">Стартовая цена</span>
                             <span class="lot__cost"><?=$value->price;?><b class="rub">р</b></span>
                         </div>
-                        <div class="lot__timer timer">
+                        <div class="lot__timer timer<?=(timeRemaining(strtotime($value->date_expire))) == 'Expire' ? ' timer--finishing' : '';?>">
                             <?=timeRemaining(strtotime($value->date_expire));?>
                         </div>
                     </div>

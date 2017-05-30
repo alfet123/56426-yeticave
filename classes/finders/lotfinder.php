@@ -77,6 +77,19 @@ class LotFinder extends BaseFinder {
         return parent::select($sql, 'LotRecord', ['%'.$searchString.'%', '%'.$searchString.'%', $limit, $offset]);
     }
 
+    /**
+     * Получает список лотов без победителей с истекшей датой
+     * @return array Список лотов
+     */
+    public static function getExpiredLots()
+    {
+        $sql  = 'select lot.* ';
+        $sql .= 'from lot ';
+        $sql .= 'where lot.winner is null and lot.date_expire <= ?';
+
+        return parent::select($sql, 'LotRecord', [date('Y-m-d H:i:s')]);
+    }
+
 }
 
 ?>

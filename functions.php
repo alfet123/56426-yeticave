@@ -98,4 +98,21 @@ function pagesParam($rowsCount)
     ];
 }
 
+// функция определения победителя
+function getWinner($bets)
+{
+    if (!count($bets)) {
+        return false;
+    }
+
+    $winner = $bets[0];
+    foreach ($bets as $bet) {
+        if ($bet->price > $winner->price) {
+            $winner = $bet;
+        }
+    }
+
+    return $winner;
+}
+
 ?>
